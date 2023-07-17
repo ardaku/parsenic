@@ -3,7 +3,7 @@
 #![doc(
     html_logo_url = "https://ardaku.github.io/mm/logo.svg",
     html_favicon_url = "https://ardaku.github.io/mm/icon.svg",
-    html_root_url = "https://docs.rs/nucleide"
+    html_root_url = "https://docs.rs/parsenic"
 )]
 #![no_std]
 #![forbid(unsafe_code, missing_docs)]
