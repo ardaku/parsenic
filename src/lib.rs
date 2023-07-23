@@ -25,7 +25,9 @@
 extern crate alloc;
 
 pub mod be;
+pub mod error;
 pub mod le;
+pub mod result;
 mod num;
 mod reader;
 mod writer;
