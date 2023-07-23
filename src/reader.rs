@@ -12,7 +12,7 @@ impl<'a> Reader<'a> {
 
     /// Read the next byte
     pub fn u8(&mut self) -> Option<u8> {
-        self.0.first().copied()
+        self.take().map(|[byte]| byte)
     }
 
     /// Read a number of raw bytes.
@@ -45,5 +45,9 @@ impl<'a> Reader<'a> {
         self.0 = data;
 
         Some(slice)
+    }
+
+    pub(crate) fn take<const SIZE: usize>(&mut self) -> Option<[u8; SIZE]> {
+        self.subslice(SIZE)?.try_into().ok()
     }
 }

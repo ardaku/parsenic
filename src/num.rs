@@ -8,8 +8,9 @@
 // LICENSE_MIT.txt and LICENSE_BOOST_1_0.txt).
 
 use core::ops::{
-    Add, AddAssign, Div, DivAssign, Mul, MulAssign, Not, Shl, ShlAssign, Shr,
-    ShrAssign, Sub, SubAssign, Rem, RemAssign, BitOr, BitOrAssign, BitAnd, BitAndAssign, BitXor, BitXorAssign,
+    Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor,
+    BitXorAssign, Div, DivAssign, Mul, MulAssign, Not, Rem, RemAssign, Shl,
+    ShlAssign, Shr, ShrAssign, Sub, SubAssign,
 };
 
 use traitful::seal;
@@ -43,7 +44,8 @@ pub trait Int:
     + PartialEq
     + Sized
     + 'static
-{}
+{
+}
 
 impl Int for u8 {}
 impl Int for i8 {}
