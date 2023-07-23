@@ -19,3 +19,4 @@ categories = ["no-std", "rust-patterns", "encoding", "parsing", "filesystem"]
 readme = "README.md"
 
 [dependencies]
+traitful = "0.2"

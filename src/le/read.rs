@@ -1,23 +1,13 @@
 use core::mem;
 
-use crate::{seal::Seal, Reader};
+use traitful::extend;
+
+use crate::Reader;
 
 /// Little endian reader extension trait
-pub trait Read: Seal {
+#[extend(Reader<'_>)]
+pub trait Read {
     /// Read the next little endian `u16`
-    fn u16(&mut self) -> Option<u16>;
-
-    /// Read the next little endian `u32`
-    fn u32(&mut self) -> Option<u32>;
-
-    /// Read the next little endian `u64`
-    fn u64(&mut self) -> Option<u64>;
-
-    /// Read the next little endian `u128`
-    fn u128(&mut self) -> Option<u128>;
-}
-
-impl Read for Reader<'_> {
     fn u16(&mut self) -> Option<u16> {
         const SIZE: usize = mem::size_of::<u16>();
 
@@ -26,6 +16,7 @@ impl Read for Reader<'_> {
         Some(u16::from_le_bytes(value.get(..SIZE)?.try_into().ok()?))
     }
 
+    /// Read the next little endian `u32`
     fn u32(&mut self) -> Option<u32> {
         const SIZE: usize = mem::size_of::<u32>();
 
@@ -34,6 +25,7 @@ impl Read for Reader<'_> {
         Some(u32::from_le_bytes(value.get(..SIZE)?.try_into().ok()?))
     }
 
+    /// Read the next little endian `u64`
     fn u64(&mut self) -> Option<u64> {
         const SIZE: usize = mem::size_of::<u64>();
 
@@ -42,6 +34,7 @@ impl Read for Reader<'_> {
         Some(u64::from_le_bytes(value.get(..SIZE)?.try_into().ok()?))
     }
 
+    /// Read the next little endian `u128`
     fn u128(&mut self) -> Option<u128> {
         const SIZE: usize = mem::size_of::<u128>();
 

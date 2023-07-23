@@ -1,7 +1,5 @@
 use core::str;
 
-use crate::seal::Seal;
-
 /// Reads from a buffer.
 #[derive(Debug)]
 pub struct Reader<'a>(&'a [u8]);
@@ -49,5 +47,3 @@ impl<'a> Reader<'a> {
         Some(slice)
     }
 }
-
-impl Seal for Reader<'_> {}

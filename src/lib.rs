@@ -28,7 +28,6 @@ pub mod be;
 pub mod le;
 mod num;
 mod reader;
-mod seal;
 mod writer;
 
 pub use self::{

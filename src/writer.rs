@@ -1,6 +1,6 @@
 use alloc::vec::Vec;
 
-use crate::{seal::Seal, UInt};
+use crate::UInt;
 
 /// Writes to a buffer.
 #[derive(Debug)]
@@ -44,5 +44,3 @@ impl<'a> Writer<'a> {
         self.0.extend(bytes.as_ref())
     }
 }
-
-impl Seal for Writer<'_> {}

@@ -9,55 +9,41 @@
 
 use core::ops::{
     Add, AddAssign, Div, DivAssign, Mul, MulAssign, Not, Shl, ShlAssign, Shr,
-    ShrAssign, Sub, SubAssign,
+    ShrAssign, Sub, SubAssign, Rem, RemAssign, BitOr, BitOrAssign, BitAnd, BitAndAssign, BitXor, BitXorAssign,
 };
 
-use crate::seal::Seal;
+use traitful::seal;
 
-pub trait IntSeal:
-    Seal
-    + Not
-    + Add
+/// Trait implemented for integer primitives
+#[seal(u8, i8, u16, i16, u32, i32, u64, i64, u128, i128)]
+pub trait Int:
+    Add
     + AddAssign
-    + Sub
-    + SubAssign
-    + Mul
-    + MulAssign
+    + BitAnd
+    + BitAnd
+    + BitAndAssign
+    + BitOr
+    + BitOrAssign
+    + BitXor
+    + BitXorAssign
     + Div
     + DivAssign
-    + Shr<u8>
-    + ShrAssign<u8>
+    + Mul
+    + MulAssign
+    + Not
+    + Rem
+    + RemAssign
     + Shl<u8>
     + ShlAssign<u8>
+    + Shr<u8>
+    + ShrAssign<u8>
+    + Sub
+    + SubAssign
     + Eq
     + PartialEq
     + Sized
-{
-}
-
-impl<T> IntSeal for T where
-    T: Seal
-        + Not
-        + Add
-        + AddAssign
-        + Sub
-        + SubAssign
-        + Mul
-        + MulAssign
-        + Div
-        + DivAssign
-        + Shr<u8>
-        + ShrAssign<u8>
-        + Shl<u8>
-        + ShlAssign<u8>
-        + Eq
-        + PartialEq
-        + Sized
-{
-}
-
-/// Trait implemented for integer primitives
-pub trait Int: IntSeal {}
+    + 'static
+{}
 
 impl Int for u8 {}
 impl Int for i8 {}
@@ -70,12 +56,9 @@ impl Int for i64 {}
 impl Int for u128 {}
 impl Int for i128 {}
 
-pub trait UIntSeal: Seal + Int + From<u8> + Copy + Clone {}
-
-impl<T> UIntSeal for T where T: Seal + Int + From<u8> + Copy + Clone {}
-
 /// Trait implemented for unsigned integer primitives
-pub trait UInt: UIntSeal {
+#[seal(u8, u16, u32, u64, u128)]
+pub trait UInt: Int {
     /// The minimum value of an unsigned integer, 0
     const ZERO: Self;
     /// Size of the primitive, in bits
