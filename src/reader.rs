@@ -1,6 +1,9 @@
 use core::str;
 
-use crate::{error, result};
+use crate::{
+    error::{EndError, LenError, Utf8Error},
+    result::{EndResult, LenResult, StrResult},
+};
 
 /// Reads from a buffer.
 #[derive(Debug)]
@@ -13,33 +16,33 @@ impl<'a> Reader<'a> {
     }
 
     /// Read the next byte
-    pub fn u8(&mut self) -> result::Len<u8> {
+    pub fn u8(&mut self) -> LenResult<u8> {
         self.take().map(|[byte]| byte)
     }
 
     /// Read a number of raw bytes.
-    pub fn bytes(&mut self, len: usize) -> result::Len<&'a [u8]> {
-        self.subslice(len)?.get(..len).ok_or(error::Len)
+    pub fn bytes(&mut self, len: usize) -> LenResult<&'a [u8]> {
+        self.subslice(len)?.get(..len).ok_or(LenError)
     }
 
     /// Parse a UTF-8 `String` of specified length.
-    pub fn str(&mut self, len: usize) -> result::Str<&'a str> {
-        str::from_utf8(self.bytes(len)?).map_err(|_| error::Utf8.into())
+    pub fn str(&mut self, len: usize) -> StrResult<&'a str> {
+        str::from_utf8(self.bytes(len)?).map_err(|_| Utf8Error.into())
     }
 
     /// Return a `Reader` that reads up to the specified length.
-    pub fn reader(&mut self, len: usize) -> result::Len<Self> {
+    pub fn reader(&mut self, len: usize) -> LenResult<Self> {
         Ok(Self(self.subslice(len)?))
     }
 
     /// Return `Some(())` if end of buffer.
-    pub fn end(&self) -> result::End {
-        self.0.is_empty().then_some(()).ok_or(error::End)
+    pub fn end(&self) -> EndResult {
+        self.0.is_empty().then_some(()).ok_or(EndError)
     }
 
-    pub(crate) fn subslice(&mut self, size: usize) -> result::Len<&'a [u8]> {
+    pub(crate) fn subslice(&mut self, size: usize) -> LenResult<&'a [u8]> {
         if size > self.0.len() {
-            return Err(error::Len);
+            return Err(LenError);
         }
 
         let (slice, data) = self.0.split_at(size);
@@ -49,7 +52,7 @@ impl<'a> Reader<'a> {
         Ok(slice)
     }
 
-    pub(crate) fn take<const SIZE: usize>(&mut self) -> result::Len<[u8; SIZE]> {
-        self.subslice(SIZE)?.try_into().map_err(|_| error::Len)
+    pub(crate) fn take<const SIZE: usize>(&mut self) -> LenResult<[u8; SIZE]> {
+        self.subslice(SIZE)?.try_into().map_err(|_| LenError)
     }
 }

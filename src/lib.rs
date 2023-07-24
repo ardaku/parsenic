@@ -27,13 +27,15 @@ extern crate alloc;
 pub mod be;
 pub mod error;
 pub mod le;
-pub mod result;
 mod num;
 mod reader;
+pub mod result;
 mod writer;
 
 pub use self::{
+    error::Error,
     num::{Int, UInt},
     reader::Reader,
+    result::Result,
     writer::Writer,
 };

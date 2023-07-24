@@ -2,72 +2,72 @@
 
 /// Ran over the end of the buffer
 #[derive(Copy, Clone, Debug)]
-pub struct Len;
+pub struct LenError;
 
 /// Expected buffer to end, but it didn't
 #[derive(Copy, Clone, Debug)]
-pub struct End;
+pub struct EndError;
 
 /// Invalid UTF8
 #[derive(Copy, Clone, Debug)]
-pub struct Utf8;
+pub struct Utf8Error;
 
 /// Parsing error
 #[derive(Copy, Clone, Debug)]
 #[non_exhaustive]
 pub enum Error {
     /// Ran over the end of the buffer
-    Len(Len),
+    Len(LenError),
     /// Expected buffer to end, but it didn't
-    End(End),
+    End(EndError),
     /// Invalid UTF8
-    Utf8(Utf8),
+    Utf8(Utf8Error),
 }
 
 /// String parsing error
 #[derive(Copy, Clone, Debug)]
-pub enum Str {
+pub enum StrError {
     /// Ran over the end of the buffer
-    Len(Len),
+    Len(LenError),
     /// Invalid UTF8
-    Utf8(Utf8),
+    Utf8(Utf8Error),
 }
 
-impl From<Str> for Error {
-    fn from(error: Str) -> Self {
+impl From<StrError> for Error {
+    fn from(error: StrError) -> Self {
         match error {
-            Str::Len(error) => Error::Len(error),
-            Str::Utf8(error) => Error::Utf8(error),
+            StrError::Len(error) => Self::Len(error),
+            StrError::Utf8(error) => Self::Utf8(error),
         }
     }
 }
 
-impl From<Len> for Error {
-    fn from(error: Len) -> Self {
+impl From<LenError> for Error {
+    fn from(error: LenError) -> Self {
         Self::Len(error)
     }
 }
 
-impl From<End> for Error {
-    fn from(error: End) -> Self {
+impl From<EndError> for Error {
+    fn from(error: EndError) -> Self {
         Self::End(error)
     }
 }
 
-impl From<Utf8> for Error {
-    fn from(error: Utf8) -> Self {
+impl From<Utf8Error> for Error {
+    fn from(error: Utf8Error) -> Self {
         Self::Utf8(error)
     }
 }
 
-impl From<Len> for Str {
-    fn from(error: Len) -> Self {
+impl From<LenError> for StrError {
+    fn from(error: LenError) -> Self {
         Self::Len(error)
     }
 }
 
-impl From<Utf8> for Str {
-    fn from(error: Utf8) -> Self {
+impl From<Utf8Error> for StrError {
+    fn from(error: Utf8Error) -> Self {
         Self::Utf8(error)
     }
 }
