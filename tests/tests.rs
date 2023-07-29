@@ -1,4 +1,4 @@
-use parsenic::{Reader, Writer};
+use parsenic::{Reader, Writer, error::{OverflowError, Uleb128Error}};
 
 #[test]
 fn basic_parsing() {
@@ -15,7 +15,10 @@ fn basic_parsing() {
     let mut reader = Reader::new(&buffer);
 
     assert_eq!([0, 1, 2, 3, 4, 5, 6, 7], reader.bytes(8).unwrap());
-    assert_eq!(HELLO_WORLD.len(), reader.u8().unwrap().try_into().unwrap());
+    assert_eq!(
+        HELLO_WORLD.len(),
+        reader.uleb128::<u8>().unwrap().try_into().unwrap(),
+    );
     assert_eq!(HELLO_WORLD, reader.str(HELLO_WORLD.len()).unwrap());
     assert_eq!(b'\0', reader.u8().unwrap());
     reader.end().unwrap();
@@ -140,6 +143,31 @@ fn be_reading() {
     assert_eq!(reader.u32().unwrap(), 800_000_000);
     assert_eq!(reader.u64().unwrap(), 10_000_999_999_999_551_561);
     assert_eq!(reader.u128().unwrap(), 1_000_000_999_999_999_551_561);
+
+    reader.end().unwrap();
+}
+
+#[test]
+fn uleb128() {
+    let mut buffer = Vec::new();
+    let mut writer = Writer::new(&mut buffer);
+
+    writer.uleb128(77u32);
+    writer.uleb128(777u32);
+    writer.uleb128(7777u32);
+    writer.uleb128(77777u32);
+    writer.uleb128(77777u32);
+
+    let mut reader = Reader::new(&buffer);
+
+    assert_eq!(reader.uleb128::<u8>().unwrap(), 77);
+    assert_eq!(reader.uleb128::<u16>().unwrap(), 777);
+    assert_eq!(reader.uleb128::<u16>().unwrap(), 7777);
+    assert_eq!(reader.uleb128::<u32>().unwrap(), 77777);
+    assert_eq!(
+        reader.uleb128::<u16>().unwrap_err(),
+        Uleb128Error::Overflow(OverflowError),
+    );
 
     reader.end().unwrap();
 }

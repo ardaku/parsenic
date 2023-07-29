@@ -1,6 +1,8 @@
 //! `Result` type aliases
 
-use crate::error::{EndError, Error, LenError, StrError, Utf8Error};
+use crate::error::{
+    EndError, Error, LenError, OverflowError, StrError, Uleb128Error, Utf8Error,
+};
 
 /// Type alias for `Result` of [`Error`]
 pub type Result<T = (), E = Error> = core::result::Result<T, E>;
@@ -14,5 +16,11 @@ pub type EndResult<T = (), E = EndError> = Result<T, E>;
 /// Type alias for `Result` of [`Utf8Error`]
 pub type Utf8Result<T = (), E = Utf8Error> = Result<T, E>;
 
+/// Type alias for `Result` of [`OverflowError`]
+pub type OverflowResult<T = (), E = OverflowError> = Result<T, E>;
+
 /// Type alias for `Result` of [`StrError`]
 pub type StrResult<T = (), E = StrError> = Result<T, E>;
+
+/// Type alias for `Result` of [`Uleb128Error`]
+pub type Uleb128Result<T = (), E = Uleb128Error> = Result<T, E>;

@@ -1,8 +1,9 @@
 use core::str;
 
 use crate::{
-    error::{EndError, LenError, Utf8Error},
-    result::{EndResult, LenResult, StrResult},
+    error::{EndError, LenError, OverflowError, Uleb128Error, Utf8Error},
+    num::UInt,
+    result::{EndResult, LenResult, StrResult, Uleb128Result},
 };
 
 /// Reads from a buffer.
@@ -13,6 +14,29 @@ impl<'a> Reader<'a> {
     /// Create a new `Reader` on the provided `buffer`.
     pub fn new(buffer: &'a [u8]) -> Self {
         Self(buffer)
+    }
+
+    /// Read next number in ULEB128 encoding.
+    pub fn uleb128<T: UInt>(&mut self) -> Uleb128Result<T> {
+        let mut value = T::ZERO;
+        let mut shift = 0;
+
+        while {
+            let byte = self.u8()?;
+            let next = byte & !0x80;
+            let more = byte != next;
+
+            if shift > T::BITS - 7 {
+                return Err(Uleb128Error::Overflow(OverflowError));
+            }
+
+            value |= T::from(next) << shift;
+            shift += 7;
+
+            more
+        } {}
+
+        Ok(value)
     }
 
     /// Read the next byte
