@@ -16,7 +16,7 @@ use core::ops::{
 use traitful::seal;
 
 /// Trait implemented for integer primitives
-#[seal(u8, i8, u16, i16, u32, i32, u64, i64, u128, i128)]
+#[seal(u8, i8, u16, i16, u32, i32, u64, i64, u128, i128, usize, isize)]
 pub trait Int:
     Add
     + AddAssign
@@ -57,9 +57,11 @@ impl Int for u64 {}
 impl Int for i64 {}
 impl Int for u128 {}
 impl Int for i128 {}
+impl Int for usize {}
+impl Int for isize {}
 
 /// Trait implemented for unsigned integer primitives
-#[seal(u8, u16, u32, u64, u128)]
+#[seal(u8, u16, u32, u64, u128, usize)]
 pub trait UInt: Int {
     /// The minimum value of an unsigned integer, 0
     const ZERO: Self;
@@ -119,6 +121,42 @@ impl UInt for u128 {
     fn little(&self) -> u8 {
         let [byte, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] =
             self.to_le_bytes();
+
+        byte
+    }
+}
+
+#[cfg(target_pointer_width = "16")]
+impl UInt for usize {
+    const BITS: u8 = 16;
+    const ZERO: usize = usize::MIN;
+
+    fn little(&self) -> u8 {
+        let [byte, _] = self.to_le_bytes();
+
+        byte
+    }
+}
+
+#[cfg(target_pointer_width = "32")]
+impl UInt for usize {
+    const BITS: u8 = 32;
+    const ZERO: usize = usize::MIN;
+
+    fn little(&self) -> u8 {
+        let [byte, _, _, _] = self.to_le_bytes();
+
+        byte
+    }
+}
+
+#[cfg(target_pointer_width = "64")]
+impl UInt for usize {
+    const BITS: u8 = 64;
+    const ZERO: usize = usize::MIN;
+
+    fn little(&self) -> u8 {
+        let [byte, _, _, _, _, _, _, _] = self.to_le_bytes();
 
         byte
     }
