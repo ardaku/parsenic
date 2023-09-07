@@ -1,4 +1,7 @@
-use parsenic::{Reader, Writer, error::{OverflowError, Uleb128Error}};
+use parsenic::{
+    error::{OverflowError, Uleb128Error},
+    Reader, Writer,
+};
 
 #[test]
 fn basic_parsing() {
@@ -11,6 +14,8 @@ fn basic_parsing() {
     writer.uleb128(HELLO_WORLD.len());
     writer.str(HELLO_WORLD);
     writer.u8(b'\0');
+    writer.i8(-1);
+    writer.u8(255);
 
     let mut reader = Reader::new(&buffer);
 
@@ -21,6 +26,8 @@ fn basic_parsing() {
     );
     assert_eq!(HELLO_WORLD, reader.str(HELLO_WORLD.len()).unwrap());
     assert_eq!(b'\0', reader.u8().unwrap());
+    assert_eq!(255, reader.u8().unwrap());
+    assert_eq!(-1, reader.i8().unwrap());
     reader.end().unwrap();
 }
 
@@ -68,15 +75,23 @@ fn le_parsing() {
 
     writer.u16(4_235);
     writer.u32(800_000_000);
-    writer.u64(10_000_999_999_999_551_561);
+    writer.u64(10_999_999_999_551_561);
     writer.u128(1_000_000_999_999_999_551_561);
+    writer.i16(-4_235);
+    writer.i32(800_000_000);
+    writer.i64(-10_999_999_999_551_561);
+    writer.i128(1_000_000_999_999_999_551_561);
 
     let mut reader = Reader::new(&buffer);
 
     assert_eq!(reader.u16().unwrap(), 4_235);
     assert_eq!(reader.u32().unwrap(), 800_000_000);
-    assert_eq!(reader.u64().unwrap(), 10_000_999_999_999_551_561);
+    assert_eq!(reader.u64().unwrap(), 10_999_999_999_551_561);
     assert_eq!(reader.u128().unwrap(), 1_000_000_999_999_999_551_561);
+    assert_eq!(reader.i16().unwrap(), -4_235);
+    assert_eq!(reader.i32().unwrap(), 800_000_000);
+    assert_eq!(reader.i64().unwrap(), -10_999_999_999_551_561);
+    assert_eq!(reader.i128().unwrap(), 1_000_000_999_999_999_551_561);
 
     reader.end().unwrap();
 }
@@ -92,6 +107,10 @@ fn be_parsing() {
     writer.u32(800_000_000);
     writer.u64(10_000_999_999_999_551_561);
     writer.u128(1_000_000_999_999_999_551_561);
+    writer.i16(-4_235);
+    writer.i32(800_000_000);
+    writer.i64(-10_999_999_999_551_561);
+    writer.i128(1_000_000_999_999_999_551_561);
 
     let mut reader = Reader::new(&buffer);
 
@@ -99,6 +118,10 @@ fn be_parsing() {
     assert_eq!(reader.u32().unwrap(), 800_000_000);
     assert_eq!(reader.u64().unwrap(), 10_000_999_999_999_551_561);
     assert_eq!(reader.u128().unwrap(), 1_000_000_999_999_999_551_561);
+    assert_eq!(reader.i16().unwrap(), -4_235);
+    assert_eq!(reader.i32().unwrap(), 800_000_000);
+    assert_eq!(reader.i64().unwrap(), -10_999_999_999_551_561);
+    assert_eq!(reader.i128().unwrap(), 1_000_000_999_999_999_551_561);
 
     reader.end().unwrap();
 }
@@ -112,15 +135,23 @@ fn le_reading() {
 
     writer.bytes(4_235u16.to_le_bytes());
     writer.bytes(800_000_000u32.to_le_bytes());
-    writer.bytes(10_000_999_999_999_551_561u64.to_le_bytes());
+    writer.bytes(10_999_999_999_551_561u64.to_le_bytes());
     writer.bytes(1_000_000_999_999_999_551_561u128.to_le_bytes());
+    writer.bytes((-4_235i16).to_le_bytes());
+    writer.bytes(800_000_000i32.to_le_bytes());
+    writer.bytes((-10_999_999_999_551_561i64).to_le_bytes());
+    writer.bytes(1_000_000_999_999_999_551_561i128.to_le_bytes());
 
     let mut reader = Reader::new(&buffer);
 
     assert_eq!(reader.u16().unwrap(), 4_235);
     assert_eq!(reader.u32().unwrap(), 800_000_000);
-    assert_eq!(reader.u64().unwrap(), 10_000_999_999_999_551_561);
+    assert_eq!(reader.u64().unwrap(), 10_999_999_999_551_561);
     assert_eq!(reader.u128().unwrap(), 1_000_000_999_999_999_551_561);
+    assert_eq!(reader.i16().unwrap(), -4_235);
+    assert_eq!(reader.i32().unwrap(), 800_000_000);
+    assert_eq!(reader.i64().unwrap(), -10_999_999_999_551_561);
+    assert_eq!(reader.i128().unwrap(), 1_000_000_999_999_999_551_561);
 
     reader.end().unwrap();
 }
@@ -134,15 +165,23 @@ fn be_reading() {
 
     writer.bytes(4_235u16.to_be_bytes());
     writer.bytes(800_000_000u32.to_be_bytes());
-    writer.bytes(10_000_999_999_999_551_561u64.to_be_bytes());
+    writer.bytes(10_999_999_999_551_561u64.to_be_bytes());
     writer.bytes(1_000_000_999_999_999_551_561u128.to_be_bytes());
+    writer.bytes((-4_235i16).to_be_bytes());
+    writer.bytes(800_000_000i32.to_be_bytes());
+    writer.bytes((-10_999_999_999_551_561i64).to_be_bytes());
+    writer.bytes(1_000_000_999_999_999_551_561i128.to_be_bytes());
 
     let mut reader = Reader::new(&buffer);
 
     assert_eq!(reader.u16().unwrap(), 4_235);
     assert_eq!(reader.u32().unwrap(), 800_000_000);
-    assert_eq!(reader.u64().unwrap(), 10_000_999_999_999_551_561);
+    assert_eq!(reader.u64().unwrap(), 10_999_999_999_551_561);
     assert_eq!(reader.u128().unwrap(), 1_000_000_999_999_999_551_561);
+    assert_eq!(reader.i16().unwrap(), -4_235);
+    assert_eq!(reader.i32().unwrap(), 800_000_000);
+    assert_eq!(reader.i64().unwrap(), -10_999_999_999_551_561);
+    assert_eq!(reader.i128().unwrap(), 1_000_000_999_999_999_551_561);
 
     reader.end().unwrap();
 }

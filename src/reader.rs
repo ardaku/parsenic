@@ -44,6 +44,11 @@ impl<'a> Reader<'a> {
         self.take().map(|[byte]| byte)
     }
 
+    /// Read the next signed byte
+    pub fn i8(&mut self) -> LenResult<i8> {
+        self.take().map(|[byte]| i8::from_ne_bytes([byte]))
+    }
+
     /// Read a number of raw bytes.
     pub fn bytes(&mut self, len: usize) -> LenResult<&'a [u8]> {
         self.subslice(len)?.get(..len).ok_or(LenError)

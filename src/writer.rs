@@ -34,6 +34,13 @@ impl<'a> Writer<'a> {
         self.0.push(byte);
     }
 
+    /// Write out a signed byte
+    pub fn i8(&mut self, byte: i8) {
+        let [byte] = byte.to_ne_bytes();
+
+        self.0.push(byte);
+    }
+
     /// Write out a UTF-8 string slice (does not include length).
     pub fn str(&mut self, string: impl AsRef<str>) {
         self.bytes(string.as_ref().as_bytes())
