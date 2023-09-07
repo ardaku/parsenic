@@ -1,4 +1,4 @@
-//! #### A simple parsing crate
+//! #### A simple no-std I/O and parsing crate
 
 #![doc(
     html_logo_url = "https://ardaku.github.io/mm/logo.svg",

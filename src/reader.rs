@@ -41,22 +41,27 @@ impl<'a> Reader<'a> {
 
     /// Read the next byte
     pub fn u8(&mut self) -> LenResult<u8> {
-        self.take().map(|[byte]| byte)
+        self.array().map(|[byte]| byte)
     }
 
     /// Read the next signed byte
     pub fn i8(&mut self) -> LenResult<i8> {
-        self.take().map(|[byte]| i8::from_ne_bytes([byte]))
+        self.array().map(|[byte]| i8::from_ne_bytes([byte]))
     }
 
-    /// Read a number of raw bytes.
-    pub fn bytes(&mut self, len: usize) -> LenResult<&'a [u8]> {
+    /// Read a number of raw bytes as a slice.
+    pub fn slice(&mut self, len: usize) -> LenResult<&'a [u8]> {
         self.subslice(len)?.get(..len).ok_or(LenError)
     }
 
-    /// Parse a UTF-8 `String` of specified length.
+    /// Read a number of raw bytes as an array.
+    pub fn array<const LEN: usize>(&mut self) -> LenResult<[u8; LEN]> {
+        self.subslice(LEN)?.try_into().map_err(|_| LenError)
+    }
+
+    /// Parse a UTF-8 string slice of specified length.
     pub fn str(&mut self, len: usize) -> StrResult<&'a str> {
-        str::from_utf8(self.bytes(len)?).map_err(|_| Utf8Error.into())
+        str::from_utf8(self.slice(len)?).map_err(|_| Utf8Error.into())
     }
 
     /// Return a `Reader` that reads up to the specified length.
@@ -79,9 +84,5 @@ impl<'a> Reader<'a> {
         self.0 = data;
 
         Ok(slice)
-    }
-
-    pub(crate) fn take<const SIZE: usize>(&mut self) -> LenResult<[u8; SIZE]> {
-        self.subslice(SIZE)?.try_into().map_err(|_| LenError)
     }
 }

@@ -11,6 +11,7 @@ fn basic_parsing() {
     let mut writer = Writer::new(&mut buffer);
 
     writer.bytes([0, 1, 2, 3, 4, 5, 6, 7]);
+    writer.bytes([0, 1, 2, 3, 4, 5, 6, 7]);
     writer.uleb128(HELLO_WORLD.len());
     writer.str(HELLO_WORLD);
     writer.u8(b'\0');
@@ -19,7 +20,8 @@ fn basic_parsing() {
 
     let mut reader = Reader::new(&buffer);
 
-    assert_eq!([0, 1, 2, 3, 4, 5, 6, 7], reader.bytes(8).unwrap());
+    assert_eq!([0, 1, 2, 3, 4, 5, 6, 7], reader.slice(8).unwrap());
+    assert_eq!([0, 1, 2, 3, 4, 5, 6, 7], reader.array().unwrap());
     assert_eq!(
         HELLO_WORLD.len(),
         reader.uleb128::<u8>().unwrap().try_into().unwrap(),
