@@ -22,8 +22,6 @@
     variant_size_differences
 )]
 
-extern crate alloc;
-
 pub mod be;
 pub mod error;
 pub mod le;

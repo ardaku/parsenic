@@ -1,9 +1,11 @@
+use core::iter::Extend;
+
 use traitful::seal;
 
 use crate::{UInt, Writer};
 
 /// Basic writing methods
-#[seal(Writer<'_>)]
+#[seal(for<T: Extend<u8>> Writer<'_, T>)]
 pub trait Write {
     /// Write out `value` in ULEB128 encoding.
     fn uleb128<T: UInt>(&mut self, value: T);

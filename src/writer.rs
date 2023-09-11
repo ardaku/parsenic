@@ -1,20 +1,20 @@
-use alloc::vec::Vec;
+use core::iter::Extend;
 
 use crate::{UInt, Write};
 
 /// Writes to a buffer.
 #[derive(Debug)]
-pub struct Writer<'a>(&'a mut Vec<u8>);
+pub struct Writer<'a, T: Extend<u8>>(&'a mut T);
 
-impl<'a> Writer<'a> {
+impl<'a, T: Extend<u8>> Writer<'a, T> {
     /// Create a new `Writer` to the provided `buffer`.
-    pub fn new(buffer: &'a mut Vec<u8>) -> Self {
+    pub fn new(buffer: &'a mut T) -> Self {
         Self(buffer)
     }
 }
 
-impl Write for Writer<'_> {
-    fn uleb128<T: UInt>(&mut self, value: T) {
+impl<T: Extend<u8>> Write for Writer<'_, T> {
+    fn uleb128<V: UInt>(&mut self, value: V) {
         let mut remaining = value;
 
         while {
@@ -22,7 +22,7 @@ impl Write for Writer<'_> {
 
             remaining >>= 7;
 
-            let more = remaining != T::ZERO;
+            let more = remaining != V::ZERO;
 
             self.u8(if more { byte | 0x80 } else { byte & !0x80 });
 
@@ -31,13 +31,13 @@ impl Write for Writer<'_> {
     }
 
     fn u8(&mut self, byte: u8) {
-        self.0.push(byte);
+        self.0.extend(Some(byte));
     }
 
     fn i8(&mut self, byte: i8) {
         let [byte] = byte.to_ne_bytes();
 
-        self.0.push(byte);
+        self.0.extend(Some(byte));
     }
 
     fn str(&mut self, string: impl AsRef<str>) {
@@ -45,6 +45,6 @@ impl Write for Writer<'_> {
     }
 
     fn bytes(&mut self, bytes: impl AsRef<[u8]>) {
-        self.0.extend(bytes.as_ref())
+        self.0.extend(bytes.as_ref().into_iter().cloned())
     }
 }

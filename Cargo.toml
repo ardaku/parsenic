@@ -15,7 +15,13 @@ include = [
     "/LICENSE_MIT",
 ]
 keywords = ["parsing", "encoding", "decoding", "format", "io"]
-categories = ["no-std", "rust-patterns", "encoding", "parsing", "filesystem"]
+categories = [
+    "no-std",
+    "no-std::no-alloc",
+    "rust-patterns",
+    "parsing",
+    "filesystem",
+]
 readme = "README.md"
 
 [dependencies]
