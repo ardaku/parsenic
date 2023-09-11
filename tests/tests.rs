@@ -1,6 +1,6 @@
 use parsenic::{
     error::{OverflowError, Uleb128Error},
-    Reader, Writer,
+    Read as _, Reader, Write as _, Writer,
 };
 
 #[test]

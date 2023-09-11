@@ -1,9 +1,9 @@
 use traitful::extend;
 
-use crate::{result::LenResult, Reader};
+use crate::result::LenResult;
 
 /// Big endian reader extension trait
-#[extend(Reader<'_>)]
+#[extend(for<'a, T: crate::Read<'a>> T)]
 pub trait Read {
     /// Read the next big endian `u16`
     fn u16(&mut self) -> LenResult<u16> {

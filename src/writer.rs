@@ -1,6 +1,6 @@
 use alloc::vec::Vec;
 
-use crate::UInt;
+use crate::{UInt, Write};
 
 /// Writes to a buffer.
 #[derive(Debug)]
@@ -11,9 +11,10 @@ impl<'a> Writer<'a> {
     pub fn new(buffer: &'a mut Vec<u8>) -> Self {
         Self(buffer)
     }
+}
 
-    /// Write out `value` in ULEB128 encoding.
-    pub fn uleb128<T: UInt>(&mut self, value: T) {
+impl Write for Writer<'_> {
+    fn uleb128<T: UInt>(&mut self, value: T) {
         let mut remaining = value;
 
         while {
@@ -29,25 +30,21 @@ impl<'a> Writer<'a> {
         } {}
     }
 
-    /// Write out a byte
-    pub fn u8(&mut self, byte: u8) {
+    fn u8(&mut self, byte: u8) {
         self.0.push(byte);
     }
 
-    /// Write out a signed byte
-    pub fn i8(&mut self, byte: i8) {
+    fn i8(&mut self, byte: i8) {
         let [byte] = byte.to_ne_bytes();
 
         self.0.push(byte);
     }
 
-    /// Write out a UTF-8 string slice (does not include length).
-    pub fn str(&mut self, string: impl AsRef<str>) {
+    fn str(&mut self, string: impl AsRef<str>) {
         self.bytes(string.as_ref().as_bytes())
     }
 
-    /// Write out raw bytes.
-    pub fn bytes(&mut self, bytes: impl AsRef<[u8]>) {
+    fn bytes(&mut self, bytes: impl AsRef<[u8]>) {
         self.0.extend(bytes.as_ref())
     }
 }

@@ -1,10 +1,8 @@
 use traitful::extend;
 
-use crate::Writer;
-
 /// Little endian writer extension trait
-#[extend(Writer<'_>)]
-pub trait Write {
+#[extend]
+pub trait Write: crate::Write {
     /// Write out a little endian encoded 2-byte unsigned integer.
     fn u16(&mut self, int: u16) {
         self.bytes(int.to_le_bytes());

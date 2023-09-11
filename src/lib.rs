@@ -28,14 +28,18 @@ pub mod be;
 pub mod error;
 pub mod le;
 mod num;
+mod read;
 mod reader;
 pub mod result;
+mod write;
 mod writer;
 
 pub use self::{
     error::Error,
     num::{Int, UInt},
+    read::Read,
     reader::Reader,
     result::Result,
+    write::Write,
     writer::Writer,
 };
