@@ -30,7 +30,7 @@ impl<'a> Reader<'a> {
     }
 }
 
-impl<'a> Read<'a> for Reader<'a> {
+impl Read for Reader<'_> {
     fn uleb128<T: UInt>(&mut self) -> Uleb128Result<T> {
         let mut value = T::ZERO;
         let mut shift = 0;
@@ -61,7 +61,7 @@ impl<'a> Read<'a> for Reader<'a> {
         self.array().map(|[byte]| i8::from_ne_bytes([byte]))
     }
 
-    fn slice(&mut self, len: usize) -> LenResult<&'a [u8]> {
+    fn slice(&mut self, len: usize) -> LenResult<&'_ [u8]> {
         self.subslice(len)?.get(..len).ok_or(LenError)
     }
 
@@ -69,7 +69,7 @@ impl<'a> Read<'a> for Reader<'a> {
         self.subslice(LEN)?.try_into().map_err(|_| LenError)
     }
 
-    fn str(&mut self, len: usize) -> StrResult<&'a str> {
+    fn str(&mut self, len: usize) -> StrResult<&'_ str> {
         str::from_utf8(self.slice(len)?).map_err(|_| Utf8Error.into())
     }
 

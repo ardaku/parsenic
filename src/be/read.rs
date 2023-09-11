@@ -3,8 +3,8 @@ use traitful::extend;
 use crate::result::LenResult;
 
 /// Big endian reader extension trait
-#[extend(for<'a, T: crate::Read<'a>> T)]
-pub trait Read {
+#[extend]
+pub trait Read: crate::Read {
     /// Read the next big endian `u16`
     fn u16(&mut self) -> LenResult<u16> {
         Ok(u16::from_be_bytes(self.array()?))

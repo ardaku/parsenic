@@ -9,8 +9,8 @@ use crate::{
 };
 
 /// Basic reading methods
-#[seal(Reader<'a>)]
-pub trait Read<'a> {
+#[seal(Reader<'_>)]
+pub trait Read {
     /// Read next number in ULEB128 encoding.
     fn uleb128<T: UInt>(&mut self) -> Uleb128Result<T>;
 
@@ -21,15 +21,15 @@ pub trait Read<'a> {
     fn i8(&mut self) -> LenResult<i8>;
 
     /// Read a number of raw bytes as a slice.
-    fn slice(&mut self, len: usize) -> LenResult<&'a [u8]>;
+    fn slice(&mut self, len: usize) -> LenResult<&'_ [u8]>;
 
     /// Read a number of raw bytes as an array.
     fn array<const LEN: usize>(&mut self) -> LenResult<[u8; LEN]>;
 
     /// Parse a UTF-8 string slice of specified length.
-    fn str(&mut self, len: usize) -> StrResult<&'a str>;
+    fn str(&mut self, len: usize) -> StrResult<&'_ str>;
 
-    /// Return `Some(())` if end of buffer.
+    /// Return [`Ok`] if end of buffer.
     fn end(&self) -> EndResult;
 
     /// Return a `Reader` that reads up to the specified length.

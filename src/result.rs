@@ -1,4 +1,4 @@
-//! `Result` type aliases
+//! [`Result`](core::result::Result) type aliases
 
 use crate::error::{
     EndError, Error, LenError, OverflowError, StrError, Uleb128Error, Utf8Error,
