@@ -23,21 +23,34 @@
 )]
 
 pub mod be;
+// mod buf_writer;
+mod buffer;
+pub mod buffered;
+mod cursor;
+mod drain;
+mod empty;
 pub mod error;
 pub mod le;
 mod num;
 mod read;
 mod reader;
 pub mod result;
+mod seek;
 mod write;
 mod writer;
 
 pub use self::{
+    // buf_writer::BufWriter,
+    buffer::Buffer,
+    cursor::Cursor,
+    drain::{drain, Drain},
+    empty::{empty, Empty},
     error::Error,
     num::{Int, UInt},
     read::Read,
     reader::Reader,
     result::Result,
+    seek::Seek,
     write::Write,
     writer::Writer,
 };

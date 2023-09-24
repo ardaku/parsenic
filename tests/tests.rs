@@ -10,13 +10,13 @@ fn basic_parsing() {
     let mut buffer = Vec::new();
     let mut writer = Writer::new(&mut buffer);
 
-    writer.bytes([0, 1, 2, 3, 4, 5, 6, 7]);
-    writer.bytes([0, 1, 2, 3, 4, 5, 6, 7]);
-    writer.uleb128(HELLO_WORLD.len());
-    writer.str(HELLO_WORLD);
-    writer.u8(b'\0');
-    writer.i8(-1);
-    writer.u8(255);
+    writer.bytes([0, 1, 2, 3, 4, 5, 6, 7]).unwrap();
+    writer.bytes([0, 1, 2, 3, 4, 5, 6, 7]).unwrap();
+    writer.uleb128(HELLO_WORLD.len()).unwrap();
+    writer.str(HELLO_WORLD).unwrap();
+    writer.u8(b'\0').unwrap();
+    writer.i8(-1).unwrap();
+    writer.u8(255).unwrap();
 
     let mut reader = Reader::new(&buffer);
 
@@ -75,14 +75,14 @@ fn le_parsing() {
     let mut buffer = Vec::new();
     let mut writer = Writer::new(&mut buffer);
 
-    writer.u16(4_235);
-    writer.u32(800_000_000);
-    writer.u64(10_999_999_999_551_561);
-    writer.u128(1_000_000_999_999_999_551_561);
-    writer.i16(-4_235);
-    writer.i32(800_000_000);
-    writer.i64(-10_999_999_999_551_561);
-    writer.i128(1_000_000_999_999_999_551_561);
+    writer.u16(4_235).unwrap();
+    writer.u32(800_000_000).unwrap();
+    writer.u64(10_999_999_999_551_561).unwrap();
+    writer.u128(1_000_000_999_999_999_551_561).unwrap();
+    writer.i16(-4_235).unwrap();
+    writer.i32(800_000_000).unwrap();
+    writer.i64(-10_999_999_999_551_561).unwrap();
+    writer.i128(1_000_000_999_999_999_551_561).unwrap();
 
     let mut reader = Reader::new(&buffer);
 
@@ -105,14 +105,14 @@ fn be_parsing() {
     let mut buffer = Vec::new();
     let mut writer = Writer::new(&mut buffer);
 
-    writer.u16(4_235);
-    writer.u32(800_000_000);
-    writer.u64(10_000_999_999_999_551_561);
-    writer.u128(1_000_000_999_999_999_551_561);
-    writer.i16(-4_235);
-    writer.i32(800_000_000);
-    writer.i64(-10_999_999_999_551_561);
-    writer.i128(1_000_000_999_999_999_551_561);
+    writer.u16(4_235).unwrap();
+    writer.u32(800_000_000).unwrap();
+    writer.u64(10_000_999_999_999_551_561).unwrap();
+    writer.u128(1_000_000_999_999_999_551_561).unwrap();
+    writer.i16(-4_235).unwrap();
+    writer.i32(800_000_000).unwrap();
+    writer.i64(-10_999_999_999_551_561).unwrap();
+    writer.i128(1_000_000_999_999_999_551_561).unwrap();
 
     let mut reader = Reader::new(&buffer);
 
@@ -135,14 +135,22 @@ fn le_reading() {
     let mut buffer = Vec::new();
     let mut writer = Writer::new(&mut buffer);
 
-    writer.bytes(4_235u16.to_le_bytes());
-    writer.bytes(800_000_000u32.to_le_bytes());
-    writer.bytes(10_999_999_999_551_561u64.to_le_bytes());
-    writer.bytes(1_000_000_999_999_999_551_561u128.to_le_bytes());
-    writer.bytes((-4_235i16).to_le_bytes());
-    writer.bytes(800_000_000i32.to_le_bytes());
-    writer.bytes((-10_999_999_999_551_561i64).to_le_bytes());
-    writer.bytes(1_000_000_999_999_999_551_561i128.to_le_bytes());
+    writer.bytes(4_235u16.to_le_bytes()).unwrap();
+    writer.bytes(800_000_000u32.to_le_bytes()).unwrap();
+    writer
+        .bytes(10_999_999_999_551_561u64.to_le_bytes())
+        .unwrap();
+    writer
+        .bytes(1_000_000_999_999_999_551_561u128.to_le_bytes())
+        .unwrap();
+    writer.bytes((-4_235i16).to_le_bytes()).unwrap();
+    writer.bytes(800_000_000i32.to_le_bytes()).unwrap();
+    writer
+        .bytes((-10_999_999_999_551_561i64).to_le_bytes())
+        .unwrap();
+    writer
+        .bytes(1_000_000_999_999_999_551_561i128.to_le_bytes())
+        .unwrap();
 
     let mut reader = Reader::new(&buffer);
 
@@ -165,14 +173,22 @@ fn be_reading() {
     let mut buffer = Vec::new();
     let mut writer = Writer::new(&mut buffer);
 
-    writer.bytes(4_235u16.to_be_bytes());
-    writer.bytes(800_000_000u32.to_be_bytes());
-    writer.bytes(10_999_999_999_551_561u64.to_be_bytes());
-    writer.bytes(1_000_000_999_999_999_551_561u128.to_be_bytes());
-    writer.bytes((-4_235i16).to_be_bytes());
-    writer.bytes(800_000_000i32.to_be_bytes());
-    writer.bytes((-10_999_999_999_551_561i64).to_be_bytes());
-    writer.bytes(1_000_000_999_999_999_551_561i128.to_be_bytes());
+    writer.bytes(4_235u16.to_be_bytes()).unwrap();
+    writer.bytes(800_000_000u32.to_be_bytes()).unwrap();
+    writer
+        .bytes(10_999_999_999_551_561u64.to_be_bytes())
+        .unwrap();
+    writer
+        .bytes(1_000_000_999_999_999_551_561u128.to_be_bytes())
+        .unwrap();
+    writer.bytes((-4_235i16).to_be_bytes()).unwrap();
+    writer.bytes(800_000_000i32.to_be_bytes()).unwrap();
+    writer
+        .bytes((-10_999_999_999_551_561i64).to_be_bytes())
+        .unwrap();
+    writer
+        .bytes(1_000_000_999_999_999_551_561i128.to_be_bytes())
+        .unwrap();
 
     let mut reader = Reader::new(&buffer);
 
@@ -193,11 +209,11 @@ fn uleb128() {
     let mut buffer = Vec::new();
     let mut writer = Writer::new(&mut buffer);
 
-    writer.uleb128(77u32);
-    writer.uleb128(777u32);
-    writer.uleb128(7777u32);
-    writer.uleb128(77777u32);
-    writer.uleb128(77777u32);
+    writer.uleb128(77u32).unwrap();
+    writer.uleb128(777u32).unwrap();
+    writer.uleb128(7777u32).unwrap();
+    writer.uleb128(77777u32).unwrap();
+    writer.uleb128(77777u32).unwrap();
 
     let mut reader = Reader::new(&buffer);
 

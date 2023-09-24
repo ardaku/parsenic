@@ -16,6 +16,14 @@ pub struct Utf8Error;
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct OverflowError;
 
+/// Destination has run out of space
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub struct FullError;
+
+/// Destination lost (from either corruption or disconnection)
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub struct LostError;
+
 /// Parsing error
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
@@ -28,6 +36,10 @@ pub enum Error {
     Utf8(Utf8Error),
     /// Overflow (variable can't contain parsed value)
     Overflow(OverflowError),
+    /// Destination has run out of space
+    Full(FullError),
+    /// Destination lost (from either corruption or disconnection)
+    Lost(LostError),
 }
 
 /// ULEB128 parsing error
@@ -66,6 +78,24 @@ impl From<StrError> for Error {
     }
 }
 
+/// Flush error
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum FlushError {
+    /// Destination has run out of space
+    Full(FullError),
+    /// Destination lost (from either corruption or disconnection)
+    Lost(LostError),
+}
+
+impl From<FlushError> for Error {
+    fn from(error: FlushError) -> Self {
+        match error {
+            FlushError::Full(error) => Self::Full(error),
+            FlushError::Lost(error) => Self::Lost(error),
+        }
+    }
+}
+
 impl From<LenError> for Error {
     fn from(error: LenError) -> Self {
         Self::Len(error)
@@ -81,6 +111,24 @@ impl From<EndError> for Error {
 impl From<Utf8Error> for Error {
     fn from(error: Utf8Error) -> Self {
         Self::Utf8(error)
+    }
+}
+
+impl From<OverflowError> for Error {
+    fn from(error: OverflowError) -> Self {
+        Self::Overflow(error)
+    }
+}
+
+impl From<FullError> for Error {
+    fn from(error: FullError) -> Self {
+        Self::Full(error.into())
+    }
+}
+
+impl From<LostError> for Error {
+    fn from(error: LostError) -> Self {
+        Self::Lost(error.into())
     }
 }
 
@@ -105,5 +153,17 @@ impl From<LenError> for Uleb128Error {
 impl From<OverflowError> for Uleb128Error {
     fn from(error: OverflowError) -> Self {
         Self::Overflow(error)
+    }
+}
+
+impl From<FullError> for FlushError {
+    fn from(error: FullError) -> Self {
+        Self::Full(error)
+    }
+}
+
+impl From<LostError> for FlushError {
+    fn from(error: LostError) -> Self {
+        Self::Lost(error)
     }
 }

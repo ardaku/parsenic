@@ -7,14 +7,14 @@ use crate::{
     Read,
 };
 
-/// Reads from a buffer.
+/// [`slice`] [`Read`]er
 #[derive(Debug)]
 pub struct Reader<'a>(&'a [u8]);
 
 impl<'a> Reader<'a> {
-    /// Create a new `Reader` on the provided `buffer`.
-    pub fn new(buffer: &'a [u8]) -> Self {
-        Self(buffer)
+    /// Create a new `Reader` on the provided `stream`.
+    pub fn new(stream: &'a [u8]) -> Self {
+        Self(stream)
     }
 
     fn subslice(&mut self, size: usize) -> LenResult<&'a [u8]> {
