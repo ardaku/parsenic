@@ -23,31 +23,26 @@
 )]
 
 pub mod be;
-// mod buf_writer;
 pub mod buf;
 pub mod class;
-mod cursor;
 mod empty;
 pub mod error;
+pub mod io;
 pub mod le;
 mod purge;
 mod read;
 mod reader;
 pub mod result;
-mod seek;
 mod write;
 mod writer;
 
 pub use self::{
-    // buf_writer::BufWriter,
-    cursor::Cursor,
     empty::{empty, Empty},
     error::Error,
     purge::{purge, Purge},
     read::Read,
     reader::Reader,
     result::Result,
-    seek::Seek,
     write::Write,
     writer::Writer,
 };

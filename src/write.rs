@@ -2,11 +2,12 @@ use core::iter::Extend;
 
 use traitful::seal;
 
-use crate::{class::UInt, result::FlushResult, Writer};
+use crate::{class::UInt, result::FlushResult, Purge, Writer};
 
 /// Basic writing methods
 #[seal(
     for<T: Extend<u8>> Writer<'_, T>,
+    Purge,
 )]
 // for<S: Save, const SIZE: usize> BufWriter<'_, S, SIZE>,
 pub trait Write {

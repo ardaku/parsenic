@@ -31,19 +31,19 @@ fn basic_parsing() {
 }
 
 #[test]
-fn reader() {
+fn bytes() {
     let buffer = [1, 2, 3, 4, 5, 6, 7, 8];
     let mut reader = Reader::new(&buffer);
 
-    reader.reader(0).unwrap().end().unwrap();
+    reader.bytes(0).unwrap().end().unwrap();
 
-    let mut one = reader.reader(1).unwrap();
+    let mut one = reader.bytes(1).unwrap();
 
     assert!(reader.end().is_err());
     assert_eq!(1, one.u8().unwrap());
     one.end().unwrap();
 
-    let mut three = reader.reader(3).unwrap();
+    let mut three = reader.bytes(3).unwrap();
 
     assert!(reader.end().is_err());
     assert_eq!(2, three.u8().unwrap());
@@ -51,7 +51,7 @@ fn reader() {
     assert_eq!(4, three.u8().unwrap());
     three.end().unwrap();
 
-    let mut four = reader.reader(4).unwrap();
+    let mut four = reader.bytes(4).unwrap();
 
     assert!(reader.end().is_ok());
     assert_eq!(5, four.u8().unwrap());
@@ -61,8 +61,8 @@ fn reader() {
     four.end().unwrap();
     four.end().unwrap();
     reader.end().unwrap();
-    reader.reader(0).unwrap().end().unwrap();
-    assert!(reader.reader(1).is_err());
+    reader.bytes(0).unwrap().end().unwrap();
+    assert!(reader.bytes(1).is_err());
 }
 
 #[test]

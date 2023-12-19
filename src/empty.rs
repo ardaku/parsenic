@@ -1,3 +1,5 @@
+use crate::{error::LenError, result::LenResult, Read};
+
 /// Reader that is always at EOF
 ///
 /// Returned by [`empty()`].
@@ -7,11 +9,7 @@ pub struct Empty;
 
 /// Construct a new handle to an empty reader.
 ///
-/// The returned type implements [`Read`](crate::Read) as an extension trait
-/// on an [`Iterator`] of [`u8`]s.
-///
-/// This is essentially equivalent to [`core::iter::empty()`], but without the
-/// generic.  
+/// The returned type implements [`Read`](crate::Read).
 ///
 /// This API takes some inspiration from [`std::io::empty()`].
 ///
@@ -20,20 +18,16 @@ pub fn empty() -> Empty {
     Empty
 }
 
-impl Iterator for Empty {
-    type Item = u8;
-
-    fn next(&mut self) -> Option<u8> {
-        None
-    }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (0, Some(0))
-    }
-}
-
-impl ExactSizeIterator for Empty {
-    fn len(&self) -> usize {
+impl Read for Empty {
+    fn remaining(&self) -> usize {
         0
+    }
+
+    fn bytes(&mut self, len: usize) -> LenResult<Self> {
+        (len == 0).then_some(Empty).ok_or(LenError)
+    }
+
+    fn slice(&mut self, len: usize) -> LenResult<&'_ [u8]> {
+        (len == 0).then_some([].as_ref()).ok_or(LenError)
     }
 }

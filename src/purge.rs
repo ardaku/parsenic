@@ -1,3 +1,5 @@
+use crate::{result::FlushResult, Write};
+
 /// Writer that moves data into the void
 ///
 /// Returned by [`purge()`].
@@ -5,10 +7,9 @@
 #[derive(Copy, Clone, Default, Debug)]
 pub struct Purge;
 
-/// Create an instance of a writer which will consume all bytes.
+/// Create an instance of a writer which will successfully consume all bytes.
 ///
-/// The returned type implements [`Write`](crate::Write) as an extension trait
-/// on [`Extend<u8>`].
+/// The returned type implements [`Write`](crate::Write).
 ///
 /// This API takes some inspiration from [`std::io::sink()`].
 ///
@@ -18,11 +19,10 @@ pub fn purge() -> Purge {
     Purge
 }
 
-impl Extend<u8> for Purge {
-    fn extend<T>(&mut self, iter: T)
-    where
-        T: IntoIterator<Item = u8>,
-    {
-        iter.into_iter().for_each(drop)
+impl Write for Purge {
+    fn bytes(&mut self, bytes: impl AsRef<[u8]>) -> FlushResult {
+        drop(bytes);
+
+        Ok(())
     }
 }
