@@ -1,4 +1,4 @@
-/// A reader which is always at EOF
+/// Reader that is always at EOF
 ///
 /// Returned by [`empty()`].
 #[non_exhaustive]

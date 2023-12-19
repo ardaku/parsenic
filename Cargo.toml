@@ -25,4 +25,4 @@ categories = [
 readme = "README.md"
 
 [dependencies]
-traitful = "0.2"
+traitful = "0.3"

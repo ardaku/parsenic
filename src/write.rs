@@ -2,7 +2,7 @@ use core::iter::Extend;
 
 use traitful::seal;
 
-use crate::{result::FlushResult, UInt, Writer};
+use crate::{class::UInt, result::FlushResult, Writer};
 
 /// Basic writing methods
 #[seal(

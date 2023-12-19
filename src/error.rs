@@ -1,27 +1,33 @@
 //! Error types
 
-/// Ran over the end of the buffer
+/// Source ran over the end of the buffer
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct LenError;
 
 /// Expected buffer to end, but it didn't
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct EndError;
 
 /// Invalid UTF8
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct Utf8Error;
 
 /// Overflow (variable can't contain parsed value)
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct OverflowError;
 
 /// Destination has run out of space
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct FullError;
 
 /// Destination lost (from either corruption or disconnection)
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct LostError;
 
 /// Parsing error
@@ -122,13 +128,13 @@ impl From<OverflowError> for Error {
 
 impl From<FullError> for Error {
     fn from(error: FullError) -> Self {
-        Self::Full(error.into())
+        Self::Full(error)
     }
 }
 
 impl From<LostError> for Error {
     fn from(error: LostError) -> Self {
-        Self::Lost(error.into())
+        Self::Lost(error)
     }
 }
 

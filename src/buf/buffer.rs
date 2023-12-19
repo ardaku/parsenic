@@ -2,6 +2,13 @@
 #[derive(Debug)]
 pub struct Buffer<const SIZE: usize = 8192>([u8; SIZE]);
 
+impl<const SIZE: usize> Buffer<SIZE> {
+    /// Create a new buffer.
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
 impl<const SIZE: usize> Default for Buffer<SIZE> {
     fn default() -> Self {
         Self([0; SIZE])

@@ -24,14 +24,13 @@
 
 pub mod be;
 // mod buf_writer;
-mod buffer;
-pub mod buffered;
+pub mod buf;
+pub mod class;
 mod cursor;
-mod drain;
 mod empty;
 pub mod error;
 pub mod le;
-mod num;
+mod purge;
 mod read;
 mod reader;
 pub mod result;
@@ -41,12 +40,10 @@ mod writer;
 
 pub use self::{
     // buf_writer::BufWriter,
-    buffer::Buffer,
     cursor::Cursor,
-    drain::{drain, Drain},
     empty::{empty, Empty},
     error::Error,
-    num::{Int, UInt},
+    purge::{purge, Purge},
     read::Read,
     reader::Reader,
     result::Result,

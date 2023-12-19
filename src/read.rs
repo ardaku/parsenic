@@ -3,7 +3,7 @@ use core::str;
 use traitful::seal;
 
 use crate::{
-    num::UInt,
+    class::UInt,
     result::{EndResult, LenResult, StrResult, Uleb128Result},
     Reader,
 };

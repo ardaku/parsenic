@@ -1,3 +1,5 @@
+//! Classifications of primitive types
+
 use core::ops::{
     Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor,
     BitXorAssign, Div, DivAssign, Mul, MulAssign, Not, Rem, RemAssign, Shl,
@@ -8,7 +10,10 @@ use traitful::seal;
 
 /// Trait implemented for integer primitives
 #[seal(u8, i8, u16, i16, u32, i32, u64, i64, u128, i128, usize, isize)]
-pub trait Int:
+pub trait Int: IntRequirements {}
+
+#[doc(hidden)]
+pub trait IntRequirements:
     Add<Output = Self>
     + AddAssign
     + BitAnd<Output = Self>
@@ -39,6 +44,37 @@ pub trait Int:
 {
 }
 
+impl<T> IntRequirements for T where
+    T: Add<Output = Self>
+        + AddAssign
+        + BitAnd<Output = Self>
+        + BitAndAssign
+        + BitOr<Output = Self>
+        + BitOrAssign
+        + BitXor<Output = Self>
+        + BitXorAssign
+        + Div<Output = Self>
+        + DivAssign
+        + Mul<Output = Self>
+        + MulAssign
+        + Not<Output = Self>
+        + Rem<Output = Self>
+        + RemAssign
+        + Shl<u8, Output = Self>
+        + ShlAssign<u8>
+        + Shr<u8, Output = Self>
+        + ShrAssign<u8>
+        + Sub<Output = Self>
+        + SubAssign
+        + Eq
+        + PartialEq
+        + Sized
+        + Copy
+        + Clone
+        + 'static
+{
+}
+
 impl Int for u8 {}
 impl Int for i8 {}
 impl Int for u16 {}
@@ -54,15 +90,23 @@ impl Int for isize {}
 
 /// Trait implemented for unsigned integer primitives
 #[seal(u8, u16, u32, u64, u128, usize)]
-pub trait UInt: Int + From<u8> {
+pub trait UInt: UIntRequirements {
     /// The minimum value of an unsigned integer, 0
+    #[doc(hidden)]
     const ZERO: Self;
     /// Size of the primitive, in bits
+    #[doc(hidden)]
     const BITS: u8;
 
     /// Grab the little byte.
+    #[doc(hidden)]
     fn little(self) -> u8;
 }
+
+#[doc(hidden)]
+pub trait UIntRequirements: Int + From<u8> {}
+
+impl<T> UIntRequirements for T where T: Int + From<u8> {}
 
 impl UInt for u8 {
     const BITS: u8 = 8;

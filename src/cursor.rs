@@ -1,4 +1,4 @@
-use crate::Buffer;
+use crate::buf::Buffer;
 
 /// A wrapper around an in-memory [`Buffer`], adding a cursor position
 #[derive(Debug)]

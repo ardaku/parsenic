@@ -1,9 +1,9 @@
-/// A writer which will move data into the void
+/// Writer that moves data into the void
 ///
-/// Returned by [`drain()`].
+/// Returned by [`purge()`].
 #[non_exhaustive]
 #[derive(Copy, Clone, Default, Debug)]
-pub struct Drain;
+pub struct Purge;
 
 /// Create an instance of a writer which will consume all bytes.
 ///
@@ -12,16 +12,13 @@ pub struct Drain;
 ///
 /// This API takes some inspiration from [`std::io::sink()`].
 ///
-/// The naming comes from [`futures::sink::drain()`].
-///
 /// [`std::io::sink()`]: https://doc.rust-lang.org/stable/std/io/fn.sink.html
-/// [`futures::sink::drain()`]: https://docs.rs/futures/0.3/futures/sink/fn.drain.html
 #[must_use]
-pub fn drain() -> Drain {
-    Drain
+pub fn purge() -> Purge {
+    Purge
 }
 
-impl Extend<u8> for Drain {
+impl Extend<u8> for Purge {
     fn extend<T>(&mut self, iter: T)
     where
         T: IntoIterator<Item = u8>,

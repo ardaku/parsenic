@@ -1,8 +1,8 @@
 use core::str;
 
 use crate::{
+    class::UInt,
     error::{EndError, LenError, OverflowError, Uleb128Error, Utf8Error},
-    num::UInt,
     result::{EndResult, LenResult, StrResult, Uleb128Result},
     Read,
 };

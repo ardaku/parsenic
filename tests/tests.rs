@@ -1,7 +1,4 @@
-use parsenic::{
-    error::{OverflowError, Uleb128Error},
-    Read as _, Reader, Write as _, Writer,
-};
+use parsenic::{error::Uleb128Error, Read as _, Reader, Write as _, Writer};
 
 #[test]
 fn basic_parsing() {
@@ -221,10 +218,10 @@ fn uleb128() {
     assert_eq!(reader.uleb128::<u16>().unwrap(), 777);
     assert_eq!(reader.uleb128::<u16>().unwrap(), 7777);
     assert_eq!(reader.uleb128::<u32>().unwrap(), 77777);
-    assert_eq!(
+    assert!(matches!(
         reader.uleb128::<u16>().unwrap_err(),
-        Uleb128Error::Overflow(OverflowError),
-    );
+        Uleb128Error::Overflow(_),
+    ));
 
     reader.end().unwrap();
 }
