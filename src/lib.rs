@@ -1,4 +1,23 @@
 //! #### A simple no-std I/O and parsing crate
+//!
+//! The main two traits for parsing are [`Read`] and [`Write`], implemented by
+//! [`Reader`], which reads from a fixed-size slice of bytes, and [`Writer`],
+//! which writes to a fixed-size slice of bytes.  The [`Read`] and [`Write`]
+//! traits are designed to be extended with extension traits, using
+//! [`traitful::extend#extend-a-trait`].
+//!
+//! Extension traits for big-endian an little-endian parsing are provided in
+//! this crate as well; [`be::Read`], [`be::Write`], [`le::Read`],
+//! [`le::Write`].  When importing a `Read` or `Write` extension trait, using
+//! `as _` will help avoid namespace conflicts.
+//!
+//! # Synchronous and Asynchronous
+//!
+//! The [`Read`] and [`Write`] traits are synchronous by design.  This makes it
+//! simple to read and write on in-memory data without touching I/O.  For I/O
+//! bound reading and writing, there are the [`io::Source`] and
+//! [`io::Destination`] traits which work by buffering the bytes to be sent on
+//! an [`io::Sender`] or received on an [`io::Receiver`].
 
 #![doc(
     html_logo_url = "https://ardaku.github.io/mm/logo.svg",
