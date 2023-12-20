@@ -23,7 +23,6 @@
 )]
 
 pub mod be;
-pub mod buf;
 pub mod class;
 mod empty;
 pub mod error;

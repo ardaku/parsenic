@@ -1,10 +1,10 @@
 //! I/O primitives
 
-mod cursor;
 mod receiver;
 mod seek;
 mod sender;
+mod source;
 
 pub use self::{
-    cursor::Cursor, receiver::Receiver, seek::Seek, sender::Sender,
+    receiver::Receiver, seek::Seek, sender::Sender, source::Source,
 };

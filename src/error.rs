@@ -102,6 +102,24 @@ impl From<FlushError> for Error {
     }
 }
 
+/// Receive error
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum ReceiveError {
+    /// Ran over the end of the source
+    Len(LenError),
+    /// Lost the source (disconnected)
+    Lost(LostError),
+}
+
+impl From<ReceiveError> for Error {
+    fn from(error: ReceiveError) -> Self {
+        match error {
+            ReceiveError::Len(error) => Self::Len(error),
+            ReceiveError::Lost(error) => Self::Lost(error),
+        }
+    }
+}
+
 impl From<LenError> for Error {
     fn from(error: LenError) -> Self {
         Self::Len(error)
@@ -172,4 +190,31 @@ impl From<LostError> for FlushError {
     fn from(error: LostError) -> Self {
         Self::Lost(error)
     }
+}
+
+impl From<LenError> for ReceiveError {
+    fn from(error: LenError) -> Self {
+        Self::Len(error)
+    }
+}
+
+impl From<LostError> for ReceiveError {
+    fn from(error: LostError) -> Self {
+        Self::Lost(error)
+    }
+}
+
+/// Return a [`LenError`].
+pub fn len() -> LenError {
+    LenError
+}
+
+/// Return a [`FullError`].
+pub fn full() -> FullError {
+    FullError
+}
+
+/// Return a [`LostError`].
+pub fn lost() -> LostError {
+    LostError
 }

@@ -5,9 +5,9 @@ use crate::{error::LenError, result::LenResult, Read};
 pub struct Reader<'a>(&'a [u8]);
 
 impl<'a> Reader<'a> {
-    /// Create a new `Reader` on the provided `stream`.
-    pub fn new(stream: &'a [u8]) -> Self {
-        Self(stream)
+    /// Create a new `Reader` on the provided fixed-size `buffer`.
+    pub fn new(buffer: &'a [u8]) -> Self {
+        Self(buffer)
     }
 
     fn subslice<'b>(&mut self, len: usize) -> LenResult<&'b [u8]>

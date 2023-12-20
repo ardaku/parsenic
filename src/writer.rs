@@ -1,19 +1,23 @@
-use core::iter::Extend;
-
 use crate::{result::FlushResult, Write};
 
 /// [`Extend`] [`Write`]r
 #[derive(Debug)]
-pub struct Writer<'a, T: Extend<u8>>(&'a mut T);
+pub struct Writer<'a, T>(&'a mut T);
 
-impl<'a, T: Extend<u8>> Writer<'a, T> {
-    /// Create a new `Writer` to the provided `sink`.
-    pub fn new(sink: &'a mut T) -> Self {
-        Self(sink)
+impl<'a, T> Writer<'a, T>
+where
+    T: Extend<u8>,
+{
+    /// Create a new `Writer` into the provided growable `buffer`.
+    pub fn new(buffer: &'a mut T) -> Self {
+        Self(buffer)
     }
 }
 
-impl<T: Extend<u8>> Write for Writer<'_, T> {
+impl<T> Write for Writer<'_, T>
+where
+    T: Extend<u8>,
+{
     fn bytes(&mut self, bytes: impl AsRef<[u8]>) -> FlushResult {
         self.0.extend(bytes.as_ref().iter().cloned());
 

@@ -2,7 +2,7 @@
 
 use crate::error::{
     EndError, Error, FlushError, FullError, LenError, LostError, OverflowError,
-    StrError, Uleb128Error, Utf8Error,
+    ReceiveError, StrError, Uleb128Error, Utf8Error,
 };
 
 /// Type alias for `Result` of [`Error`]
@@ -34,3 +34,6 @@ pub type Uleb128Result<T = (), E = Uleb128Error> = Result<T, E>;
 
 /// Type alias for `Result` of [`FlushError`]
 pub type FlushResult<T = (), E = FlushError> = Result<T, E>;
+
+/// Type alias for `Result` of [`ReceiveError`]
+pub type ReceiveResult<T = (), E = ReceiveError> = Result<T, E>;
