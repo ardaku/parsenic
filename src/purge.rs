@@ -1,4 +1,4 @@
-use crate::{result::FlushResult, Write};
+use crate::{result::FullResult, Write};
 
 /// Writer that moves data into the void
 ///
@@ -20,7 +20,7 @@ pub fn purge() -> Purge {
 }
 
 impl Write for Purge {
-    fn bytes(&mut self, bytes: impl AsRef<[u8]>) -> FlushResult {
+    fn bytes(&mut self, bytes: impl AsRef<[u8]>) -> FullResult {
         drop(bytes);
 
         Ok(())

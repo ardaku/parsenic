@@ -1,4 +1,4 @@
-use crate::{result::FlushResult, Write};
+use crate::{result::FullResult, Write};
 
 /// [`Extend`] [`Write`]r
 #[derive(Debug)]
@@ -18,7 +18,7 @@ impl<T> Write for Writer<'_, T>
 where
     T: Extend<u8>,
 {
-    fn bytes(&mut self, bytes: impl AsRef<[u8]>) -> FlushResult {
+    fn bytes(&mut self, bytes: impl AsRef<[u8]>) -> FullResult {
         self.0.extend(bytes.as_ref().iter().cloned());
 
         Ok(())
