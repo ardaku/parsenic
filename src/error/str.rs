@@ -5,7 +5,7 @@ use crate::error::{LenError, Utf8Error};
 pub enum StrError {
     /// Ran over the end of the buffer
     Len(LenError),
-    /// Invalid UTF8
+    /// Invalid UTF-8
     Utf8(Utf8Error),
 }
 

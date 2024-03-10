@@ -1,6 +1,6 @@
 use core::num::NonZeroUsize;
 
-/// Destination has run out of space
+/// Expected buffer to end, but it didn't
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default)]
 #[non_exhaustive]
 pub struct EndError(Option<NonZeroUsize>);

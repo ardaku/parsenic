@@ -11,7 +11,7 @@ pub enum Error {
     Len(LenError),
     /// Expected buffer to end, but it didn't
     End(EndError),
-    /// Invalid UTF8
+    /// Invalid UTF-8
     Utf8(Utf8Error),
     /// Overflow (variable can't contain parsed value)
     Overflow(OverflowError),

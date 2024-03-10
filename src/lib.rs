@@ -56,11 +56,9 @@ mod writer;
 
 pub use self::{
     empty::{empty, Empty},
-    error::Error,
     purge::{purge, Purge},
     read::Read,
     reader::Reader,
-    result::Result,
     write::Write,
     writer::Writer,
 };
