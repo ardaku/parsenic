@@ -23,10 +23,7 @@ fn basic_parsing() {
 
     assert_eq!([0, 1, 2, 3, 4, 5, 6, 7], reader.slice(8).unwrap());
     assert_eq!([0, 1, 2, 3, 4, 5, 6, 7], reader.array().unwrap());
-    assert_eq!(
-        HELLO_WORLD.len(),
-        reader.uleb128::<u8>().unwrap().try_into().unwrap(),
-    );
+    assert_eq!(HELLO_WORLD.len(), reader.uleb128::<u8>().unwrap().into());
     assert_eq!(HELLO_WORLD, reader.str(HELLO_WORLD.len()).unwrap());
     assert_eq!(b'\0', reader.u8().unwrap());
     assert_eq!(255, reader.u8().unwrap());
