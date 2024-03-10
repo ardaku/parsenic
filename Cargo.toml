@@ -6,7 +6,7 @@ license = "Apache-2.0 OR BSL-1.0 OR MIT"
 description = "A simple no-std/no-alloc I/O and parsing crate"
 repository = "https://github.com/ardaku/parsenic"
 documentation = "https://docs.rs/parsenic"
-homepage = "https://github.com/ardaku/parsenic/blob/stable/CHANGELOG.md"
+homepage = "https://github.com/ardaku/parsenic/blob/v0/CHANGELOG.md"
 include = [
     "/README.md",
     "/src/",
