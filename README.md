@@ -8,7 +8,7 @@
    - Extension traits
 
 ## License
-Copyright © 2023 The Parsenic Contributors.
+Copyright © 2023-2024 The Parsenic Contributors.
 
 Licensed under any of
  - Apache License, Version 2.0, ([LICENSE\_APACHE] or
