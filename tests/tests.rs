@@ -5,6 +5,9 @@ fn basic_parsing() {
     const HELLO_WORLD: &str = "Hello, world!";
 
     let mut buffer = Vec::new();
+
+    buffer.resize(33, b'\0');
+
     let mut writer = Writer::new(&mut buffer);
 
     writer.bytes([0, 1, 2, 3, 4, 5, 6, 7]).unwrap();
@@ -14,6 +17,7 @@ fn basic_parsing() {
     writer.u8(b'\0').unwrap();
     writer.i8(-1).unwrap();
     writer.u8(255).unwrap();
+    writer.end().unwrap();
 
     let mut reader = Reader::new(&buffer);
 
@@ -31,19 +35,19 @@ fn basic_parsing() {
 }
 
 #[test]
-fn bytes() {
+fn take_reading() {
     let buffer = [1, 2, 3, 4, 5, 6, 7, 8];
     let mut reader = Reader::new(&buffer);
 
-    reader.bytes(0).unwrap().end().unwrap();
+    reader.take(0).unwrap().end().unwrap();
 
-    let mut one = reader.bytes(1).unwrap();
+    let mut one = reader.take(1).unwrap();
 
     assert!(reader.end().is_err());
     assert_eq!(1, one.u8().unwrap());
     one.end().unwrap();
 
-    let mut three = reader.bytes(3).unwrap();
+    let mut three = reader.take(3).unwrap();
 
     assert!(reader.end().is_err());
     assert_eq!(2, three.u8().unwrap());
@@ -51,7 +55,7 @@ fn bytes() {
     assert_eq!(4, three.u8().unwrap());
     three.end().unwrap();
 
-    let mut four = reader.bytes(4).unwrap();
+    let mut four = reader.take(4).unwrap();
 
     assert!(reader.end().is_ok());
     assert_eq!(5, four.u8().unwrap());
@@ -61,16 +65,16 @@ fn bytes() {
     four.end().unwrap();
     four.end().unwrap();
     reader.end().unwrap();
-    reader.bytes(0).unwrap().end().unwrap();
-    assert!(reader.bytes(1).is_err());
+    reader.take(0).unwrap().end().unwrap();
+    assert!(reader.take(1).is_err());
 }
 
 #[test]
 fn le_parsing() {
     use parsenic::le::{Read as _, Write as _};
 
-    let mut buffer = Vec::new();
-    let mut writer = Writer::new(&mut buffer);
+    let mut buffer = [b'\0'; 60];
+    let mut writer = Writer::new(buffer.as_mut_slice());
 
     writer.u16(4_235).unwrap();
     writer.u32(800_000_000).unwrap();
@@ -80,6 +84,7 @@ fn le_parsing() {
     writer.i32(800_000_000).unwrap();
     writer.i64(-10_999_999_999_551_561).unwrap();
     writer.i128(1_000_000_999_999_999_551_561).unwrap();
+    writer.end().unwrap();
 
     let mut reader = Reader::new(&buffer);
 
@@ -99,8 +104,8 @@ fn le_parsing() {
 fn be_parsing() {
     use parsenic::be::{Read as _, Write as _};
 
-    let mut buffer = Vec::new();
-    let mut writer = Writer::new(&mut buffer);
+    let mut buffer = [b'\0'; 60];
+    let mut writer = Writer::new(buffer.as_mut_slice());
 
     writer.u16(4_235).unwrap();
     writer.u32(800_000_000).unwrap();
@@ -129,8 +134,8 @@ fn be_parsing() {
 fn le_reading() {
     use parsenic::le::Read as _;
 
-    let mut buffer = Vec::new();
-    let mut writer = Writer::new(&mut buffer);
+    let mut buffer = [b'\0'; 60];
+    let mut writer = Writer::new(buffer.as_mut_slice());
 
     writer.bytes(4_235u16.to_le_bytes()).unwrap();
     writer.bytes(800_000_000u32.to_le_bytes()).unwrap();
@@ -167,8 +172,8 @@ fn le_reading() {
 fn be_reading() {
     use parsenic::be::Read as _;
 
-    let mut buffer = Vec::new();
-    let mut writer = Writer::new(&mut buffer);
+    let mut buffer = [b'\0'; 60];
+    let mut writer = Writer::new(buffer.as_mut_slice());
 
     writer.bytes(4_235u16.to_be_bytes()).unwrap();
     writer.bytes(800_000_000u32.to_be_bytes()).unwrap();
@@ -203,8 +208,8 @@ fn be_reading() {
 
 #[test]
 fn uleb128() {
-    let mut buffer = Vec::new();
-    let mut writer = Writer::new(&mut buffer);
+    let mut buffer = [0; 11];
+    let mut writer = Writer::new(buffer.as_mut_slice());
 
     writer.uleb128(77u32).unwrap();
     writer.uleb128(777u32).unwrap();

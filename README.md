@@ -1,6 +1,6 @@
 # Parsenic
 
-#### A simple no-std I/O and parsing crate
+#### A simple no-std/no-alloc I/O and parsing crate
 
  - No-std
  - Designed with standard Rust patterns in mind

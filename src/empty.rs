@@ -5,7 +5,7 @@ use crate::{error::LenError, result::LenResult, Read};
 /// Returned by [`empty()`].
 #[non_exhaustive]
 #[derive(Copy, Clone, Default, Debug)]
-pub struct Empty;
+pub struct Empty();
 
 /// Construct a new handle to an empty reader.
 ///
@@ -15,7 +15,7 @@ pub struct Empty;
 ///
 /// [`std::io::empty()`]: https://doc.rust-lang.org/stable/std/io/fn.empty.html
 pub fn empty() -> Empty {
-    Empty
+    Empty()
 }
 
 impl Read for Empty {
@@ -23,11 +23,13 @@ impl Read for Empty {
         0
     }
 
-    fn bytes(&mut self, len: usize) -> LenResult<Self> {
-        (len == 0).then_some(Empty).ok_or(LenError)
+    fn take(&mut self, len: usize) -> LenResult<Self> {
+        (len == 0).then(Empty).ok_or(LenError::from_remaining(len))
     }
 
     fn slice(&mut self, len: usize) -> LenResult<&'_ [u8]> {
-        (len == 0).then_some([].as_ref()).ok_or(LenError)
+        (len == 0)
+            .then_some([].as_ref())
+            .ok_or(LenError::from_remaining(len))
     }
 }

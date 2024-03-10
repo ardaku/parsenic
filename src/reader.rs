@@ -1,6 +1,6 @@
 use crate::{error::LenError, result::LenResult, Read};
 
-/// [`slice`] [`Read`]er
+/// [`Read`]er that reads from a [`slice`] of bytes
 #[derive(Debug)]
 pub struct Reader<'a>(&'a [u8]);
 
@@ -14,14 +14,15 @@ impl<'a> Reader<'a> {
     where
         'a: 'b,
     {
-        if len > self.0.len() {
-            return Err(LenError);
+        if let Some(remaining) = len.checked_sub(self.0.len()) {
+            if remaining != 0 {
+                return Err(LenError::from_remaining(remaining));
+            }
         }
 
         let (slice, data) = self.0.split_at(len);
 
         self.0 = data;
-
         Ok(slice)
     }
 }
@@ -31,7 +32,7 @@ impl Read for Reader<'_> {
         self.0.len()
     }
 
-    fn bytes(&mut self, len: usize) -> LenResult<Self> {
+    fn take(&mut self, len: usize) -> LenResult<Self> {
         Ok(Reader(self.subslice(len)?))
     }
 

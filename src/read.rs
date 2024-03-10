@@ -15,22 +15,25 @@ pub trait Read {
     /// Return the number of bytes remaining in this reader.
     fn remaining(&self) -> usize;
 
-    /// Read a number of raw bytes as a reader.
-    fn bytes(&mut self, len: usize) -> LenResult<Self>
+    /// Read a number of bytes as a new reader.
+    ///
+    /// Advances `len` bytes regardless of how many bytes the returned reader
+    /// reads.
+    fn take(&mut self, len: usize) -> LenResult<Self>
     where
         Self: Sized;
 
     /// Read a number of raw bytes as a slice.
     fn slice(&mut self, len: usize) -> LenResult<&'_ [u8]>;
 
-    /// Parse a UTF-8 string slice of specified length.
-    fn str(&mut self, len: usize) -> StrResult<&'_ str> {
-        str::from_utf8(self.slice(len)?).map_err(|_| Utf8Error.into())
-    }
-
     /// Read a number of raw bytes as an array.
     fn array<const LEN: usize>(&mut self) -> LenResult<[u8; LEN]> {
-        self.slice(LEN)?.try_into().map_err(|_| LenError)
+        self.slice(LEN)?.try_into().map_err(|_| LenError::new())
+    }
+
+    /// Parse a UTF-8 string slice of specified length.
+    fn str(&mut self, len: usize) -> StrResult<&'_ str> {
+        Ok(str::from_utf8(self.slice(len)?).map_err(Utf8Error::from)?)
     }
 
     /// Read the next byte
@@ -54,7 +57,7 @@ pub trait Read {
             let more = byte != next;
 
             if shift > T::BITS - 7 {
-                return Err(Uleb128Error::Overflow(OverflowError));
+                return Err(Uleb128Error::Overflow(OverflowError::new()));
             }
 
             value |= T::from(next) << shift;
@@ -68,6 +71,8 @@ pub trait Read {
 
     /// Return [`Ok`] if end of buffer.
     fn end(&self) -> EndResult {
-        (self.remaining() == 0).then_some(()).ok_or(EndError)
+        (self.remaining() == 0)
+            .then_some(())
+            .ok_or(EndError::from_remaining(self.remaining()))
     }
 }

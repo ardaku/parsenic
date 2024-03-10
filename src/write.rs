@@ -1,16 +1,27 @@
-use core::iter::Extend;
-
 use traitful::seal;
 
-use crate::{class::UInt, result::FullResult, Purge, Writer};
+use crate::{
+    class::UInt,
+    error::EndError,
+    result::{EndResult, FullResult},
+    Purge, Writer,
+};
 
 /// Basic writing methods
-#[seal(
-    for<T: Extend<u8>> Writer<'_, T>,
-    Purge,
-)]
-// for<S: Save, const SIZE: usize> BufWriter<'_, S, SIZE>,
+#[seal(Writer<'_>, Purge)]
 pub trait Write {
+    /// Return the number of bytes remaining in this writer, or `None` if
+    /// infinite.
+    fn remaining(&self) -> Option<usize>;
+
+    /// Write a number of bytes as a new writer.
+    ///
+    /// Advances `len` bytes regardless of how many bytes the returned writer
+    /// writes.
+    fn take(&mut self, len: usize) -> FullResult<Self>
+    where
+        Self: Sized;
+
     /// Write out raw bytes.
     fn bytes(&mut self, bytes: impl AsRef<[u8]>) -> FullResult;
 
@@ -48,5 +59,12 @@ pub trait Write {
         } {}
 
         Ok(())
+    }
+
+    /// Return [`Ok`] if end of buffer.
+    fn end(&self) -> EndResult {
+        (self.remaining() == Some(0))
+            .then_some(())
+            .ok_or(EndError::from_remaining(self.remaining().unwrap_or(0)))
     }
 }

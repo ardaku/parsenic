@@ -1,15 +1,15 @@
-//! #### A simple no-std I/O and parsing crate
+//! #### A simple no-std/no-alloc I/O and parsing crate
 //!
 //! The main two traits for parsing are [`Read`] and [`Write`], implemented by
-//! [`Reader`], which reads from a fixed-size slice of bytes, and [`Writer`],
-//! which writes to a fixed-size slice of bytes.  The [`Read`] and [`Write`]
-//! traits are designed to be extended with extension traits, using
-//! [`traitful::extend#extend-a-trait`].
+//! [`Reader`], which reads from a fixed-size [`slice`] of bytes, and
+//! [`Writer`], which writes to a fixed-size [`slice`] of bytes.  The [`Read`]
+//! and [`Write`] traits are designed to be extended with extension traits,
+//! using [`traitful::extend#extend-a-trait`].
 //!
 //! Extension traits for big-endian an little-endian parsing are provided in
 //! this crate as well; [`be::Read`], [`be::Write`], [`le::Read`],
 //! [`le::Write`].  When importing a `Read` or `Write` extension trait, using
-//! `as _` will help avoid namespace conflicts.
+//! `as _` will avoid namespace conflicts.
 //!
 //! # Synchronous and Asynchronous
 //!
