@@ -56,13 +56,12 @@ pub trait Read {
             let next = byte & !0x80;
             let more = byte != next;
 
-            if shift > T::BITS - 7 {
+            if 8 - next.leading_zeros() > T::BITS.saturating_sub(shift).into() {
                 return Err(Uleb128Error::Overflow(OverflowError::new()));
             }
 
             value |= T::from(next) << shift;
             shift += 7;
-
             more
         } {}
 

@@ -227,3 +227,31 @@ fn uleb128() {
 
     reader.end().unwrap();
 }
+
+#[test]
+fn uleb128_results() {
+    let mut buffer = [0; 3];
+
+    for i in 0..=255 {
+        let mut writer = Writer::new(buffer.as_mut_slice());
+
+        writer.uleb128(i).unwrap();
+
+        let mut reader = Reader::new(&buffer);
+
+        assert_eq!(reader.uleb128::<u8>(), Ok(i), "{i}");
+    }
+
+    for i in 256u32..=65536 {
+        let mut writer = Writer::new(buffer.as_mut_slice());
+
+        writer.uleb128(i).unwrap();
+
+        let mut reader = Reader::new(&buffer);
+
+        match reader.uleb128::<u8>().unwrap_err() {
+            Uleb128Error::Len(err) => panic!("Unexpected: {err:?}"),
+            Uleb128Error::Overflow(_) => {}
+        };
+    }
+}

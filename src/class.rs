@@ -104,9 +104,9 @@ pub trait UInt: UIntRequirements {
 }
 
 #[doc(hidden)]
-pub trait UIntRequirements: Int + From<u8> {}
+pub trait UIntRequirements: Int + From<u8> + TryInto<u128> {}
 
-impl<T> UIntRequirements for T where T: Int + From<u8> {}
+impl<T> UIntRequirements for T where T: Int + From<u8> + TryInto<u128> {}
 
 impl UInt for u8 {
     const BITS: u8 = 8;
