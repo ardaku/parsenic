@@ -4,12 +4,12 @@ use core::{
     task::{Context, Poll},
 };
 
-use crate::{io::Truncate, result::LostResult};
+use crate::result::LostResult;
 
 /// [`Sender`] asynchronous destination
 ///
 /// [`Sender`]: crate::io::Sender
-pub trait Destination: Truncate {
+pub trait Destination {
     /// Attempt to send `buf` bytes.
     ///
     /// Returns the number of bytes sent when ready, or zero when destination is

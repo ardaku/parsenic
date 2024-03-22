@@ -4,12 +4,12 @@ use core::{
     task::{Context, Poll},
 };
 
-use crate::{io::Seek, result::LostResult};
+use crate::result::LostResult;
 
 /// [`Receiver`] asynchronous source
 ///
 /// [`Receiver`]: crate::io::Receiver
-pub trait Source: Seek {
+pub trait Source {
     /// Attempt to receive bytes into `buf`.
     ///
     /// Returns the number of bytes received when ready, or zero when no more

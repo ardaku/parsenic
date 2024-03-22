@@ -93,7 +93,6 @@ fn le_parsing() {
     assert_eq!(reader.i32().unwrap(), 800_000_000);
     assert_eq!(reader.i64().unwrap(), -10_999_999_999_551_561);
     assert_eq!(reader.i128().unwrap(), 1_000_000_999_999_999_551_561);
-
     reader.end().unwrap();
 }
 
@@ -123,7 +122,6 @@ fn be_parsing() {
     assert_eq!(reader.i32().unwrap(), 800_000_000);
     assert_eq!(reader.i64().unwrap(), -10_999_999_999_551_561);
     assert_eq!(reader.i128().unwrap(), 1_000_000_999_999_999_551_561);
-
     reader.end().unwrap();
 }
 
@@ -161,7 +159,6 @@ fn le_reading() {
     assert_eq!(reader.i32().unwrap(), 800_000_000);
     assert_eq!(reader.i64().unwrap(), -10_999_999_999_551_561);
     assert_eq!(reader.i128().unwrap(), 1_000_000_999_999_999_551_561);
-
     reader.end().unwrap();
 }
 
@@ -199,7 +196,6 @@ fn be_reading() {
     assert_eq!(reader.i32().unwrap(), 800_000_000);
     assert_eq!(reader.i64().unwrap(), -10_999_999_999_551_561);
     assert_eq!(reader.i128().unwrap(), 1_000_000_999_999_999_551_561);
-
     reader.end().unwrap();
 }
 
@@ -224,7 +220,6 @@ fn uleb128() {
         reader.uleb128::<u16>().unwrap_err(),
         Uleb128Error::Overflow(_),
     ));
-
     reader.end().unwrap();
 }
 
