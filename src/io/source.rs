@@ -1,14 +1,15 @@
 use core::{
+    ops::DerefMut,
     pin::Pin,
     task::{Context, Poll},
 };
 
-use crate::result::LostResult;
+use crate::{io::Seek, result::LostResult};
 
 /// [`Receiver`] asynchronous source
 ///
 /// [`Receiver`]: crate::io::Receiver
-pub trait Source {
+pub trait Source: Seek {
     /// Attempt to receive bytes into `buf`.
     ///
     /// Returns the number of bytes received when ready, or zero when no more
@@ -18,4 +19,33 @@ pub trait Source {
         cx: &mut Context<'_>,
         buf: &mut [u8],
     ) -> Poll<LostResult<usize>>;
+}
+
+impl<S> Source for &mut S
+where
+    S: Source + Unpin + ?Sized,
+{
+    fn poll_recv(
+        mut self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+        buf: &mut [u8],
+    ) -> Poll<LostResult<usize>> {
+        S::poll_recv(Pin::new(&mut **self), cx, buf)
+    }
+}
+
+impl<S, T> Source for Pin<S>
+where
+    // FIXME: Can relax `Unpin` bounds after
+    // https://github.com/rust-lang/rust/issues/86918
+    S: DerefMut<Target = T> + Unpin,
+    T: Source + Unpin,
+{
+    fn poll_recv(
+        mut self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+        buf: &mut [u8],
+    ) -> Poll<LostResult<usize>> {
+        <S::Target as Source>::poll_recv(Pin::new(&mut **self), cx, buf)
+    }
 }

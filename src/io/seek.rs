@@ -1,3 +1,5 @@
+use core::{ops::DerefMut, pin::Pin};
+
 /// Trait providing a cursor which can be moved within a fixed-size buffer of
 /// bytes.
 ///
@@ -18,15 +20,57 @@ pub trait Seek {
     /// [`LenError`]: crate::error::LenError
     fn seek(&mut self, pos: u64);
 
-    /// Return the size of the buffer.
-    ///
-    /// This value should change after either writing past the end of the buffer
-    /// or truncating the buffer.
-    fn size(&self, pos: u64) -> u64;
-
     /// Return the current seek position from the start of the buffer.
     ///
     /// This value should change on each read or write larger than zero, as well
     /// as each call to [`Self::seek()`].
     fn position(&self) -> u64;
+
+    /// Return the length of the buffer.
+    ///
+    /// This value should change after either writing past the end of the buffer
+    /// or truncating the buffer.
+    fn len(&self) -> u64;
+
+    /// Return whether the buffer is empty.
+    fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+}
+
+impl<S> Seek for &mut S
+where
+    S: Seek + ?Sized,
+{
+    fn seek(&mut self, pos: u64) {
+        (**self).seek(pos);
+    }
+
+    fn position(&self) -> u64 {
+        (**self).position()
+    }
+
+    fn len(&self) -> u64 {
+        (**self).len()
+    }
+}
+
+impl<S, T> Seek for Pin<S>
+where
+    // FIXME: Can relax `Unpin` bounds after
+    // https://github.com/rust-lang/rust/issues/86918
+    S: DerefMut<Target = T> + Unpin,
+    T: Seek + Unpin,
+{
+    fn seek(&mut self, pos: u64) {
+        self.as_mut().get_mut().seek(pos);
+    }
+
+    fn position(&self) -> u64 {
+        self.as_ref().get_ref().position()
+    }
+
+    fn len(&self) -> u64 {
+        self.as_ref().get_ref().len()
+    }
 }

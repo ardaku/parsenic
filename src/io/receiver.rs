@@ -1,6 +1,10 @@
 use core::{future, pin::Pin};
 
-use crate::{io::Source, result::LostResult, Reader};
+use crate::{
+    io::{Seek, Source},
+    result::LostResult,
+    Reader,
+};
 
 /// [`Extend`] buffered receiver.
 ///
@@ -16,11 +20,7 @@ pub struct Receiver<S, T, const BUF: usize = 8192> {
     buffer: [u8; BUF],
 }
 
-impl<S, T, const BUF: usize> Receiver<S, T, BUF>
-where
-    S: Source + Unpin,
-    T: Extend<u8> + AsRef<[u8]>,
-{
+impl<S, T, const BUF: usize> Receiver<S, T, BUF> {
     /// Create a new receiver (asynchronous source, synchronous destination).
     pub fn new(source: S, destination: T) -> Self {
         Self {
@@ -30,7 +30,13 @@ where
             buffer: [0; BUF],
         }
     }
+}
 
+impl<S, T, const BUF: usize> Receiver<S, T, BUF>
+where
+    S: Source + Unpin,
+    T: Extend<u8> + AsRef<[u8]>,
+{
     /// Receive up to `count` bytes from the source to be read.
     ///
     /// May return less if there aren't enough in the source.
@@ -77,5 +83,22 @@ where
         }
 
         Ok(Reader::new(self.destination.as_ref()))
+    }
+}
+
+impl<S, T, const BUF: usize> Seek for Receiver<S, T, BUF>
+where
+    S: Seek,
+{
+    fn seek(&mut self, pos: u64) {
+        self.source.seek(pos);
+    }
+
+    fn position(&self) -> u64 {
+        self.source.position()
+    }
+
+    fn len(&self) -> u64 {
+        self.source.len()
     }
 }
