@@ -14,7 +14,7 @@ jobs:
     - uses: taiki-e/install-action@v2
       with:
         tool: cargo-hack,cargo-minimal-versions
-    - run: rustup toolchain install ${{ matrix.tc }}
+    - run: rustup toolchain install ${{ matrix.tc }} --component rust-std
     - run: cargo +${{ matrix.tc }} test --all --all-features
   test:
     runs-on: ${{ matrix.os }}
@@ -27,7 +27,7 @@ jobs:
     - uses: taiki-e/install-action@v2
       with:
         tool: cargo-hack,cargo-minimal-versions
-    - run: rustup toolchain install ${{ matrix.tc }}
+    - run: rustup toolchain install ${{ matrix.tc }} --component rust-std
     - run: cargo +${{ matrix.tc }} minimal-versions test --all --all-features
   cross-compile:
     runs-on: ${{ matrix.os }}
@@ -48,7 +48,7 @@ jobs:
     - uses: taiki-e/install-action@v2
       with:
         tool: cargo-hack,cargo-minimal-versions
-    - run: rustup toolchain install ${{ matrix.tc }}
+    - run: rustup toolchain install ${{ matrix.tc }} --component rust-std
     - run: rustup target add ${{ matrix.cc }}
     - run: cargo +${{ matrix.tc }} minimal-versions build --all --all-features --target=${{ matrix.cc }}
   cross-compile-ios:
@@ -63,6 +63,6 @@ jobs:
     - uses: taiki-e/install-action@v2
       with:
         tool: cargo-hack,cargo-minimal-versions
-    - run: rustup toolchain install ${{ matrix.tc }}
+    - run: rustup toolchain install ${{ matrix.tc }} --component rust-std
     - run: rustup target add ${{ matrix.cc }}
     - run: cargo +${{ matrix.tc }} minimal-versions build --all --all-features --target=${{ matrix.cc }}
