@@ -49,6 +49,7 @@ jobs:
       with:
         tool: cargo-hack,cargo-minimal-versions
     - run: rustup toolchain install ${{ matrix.tc }}
+    - run: rustup target add ${{ matrix.cc }}
     - run: cargo +${{ matrix.tc }} minimal-versions build --all --all-features --target=${{ matrix.cc }}
   cross-compile-ios:
     runs-on: ${{ matrix.os }}
@@ -63,4 +64,5 @@ jobs:
       with:
         tool: cargo-hack,cargo-minimal-versions
     - run: rustup toolchain install ${{ matrix.tc }}
+    - run: rustup target add ${{ matrix.cc }}
     - run: cargo +${{ matrix.tc }} minimal-versions build --all --all-features --target=${{ matrix.cc }}
