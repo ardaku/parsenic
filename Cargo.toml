@@ -23,6 +23,7 @@ categories = [
     "filesystem",
 ]
 readme = "README.md"
+rust-version = "1.70"
 
 [dependencies]
-traitful = "0.3"
+traitful = "0.3.0"
