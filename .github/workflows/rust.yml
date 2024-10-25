@@ -3,25 +3,38 @@ on: [push, pull_request]
 name: tests
 
 jobs:
-  test:
+  test-nightly:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        tc: [1.70.0, stable, beta, nightly]
+        tc: [nightly]
     steps:
     - uses: taiki-e/checkout-action@v1
     - uses: taiki-e/install-action@v2
       with:
         tool: cargo-hack,cargo-minimal-versions
-    - run: rustup toolchain add ${{ matrix.tc }}
+    - run: rustup toolchain install ${{ matrix.tc }}
+    - run: cargo +${{ matrix.tc }} test --all --all-features
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        tc: [1.70.0, stable, beta]
+    steps:
+    - uses: taiki-e/checkout-action@v1
+    - uses: taiki-e/install-action@v2
+      with:
+        tool: cargo-hack,cargo-minimal-versions
+    - run: rustup toolchain install ${{ matrix.tc }}
     - run: cargo +${{ matrix.tc }} minimal-versions test --all --all-features
   cross-compile:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
-        tc: [1.70.0]
+        tc: [1.70.0, stable, beta]
         cc:
         - aarch64-linux-android
         - i686-pc-windows-gnu
@@ -35,19 +48,19 @@ jobs:
     - uses: taiki-e/install-action@v2
       with:
         tool: cargo-hack,cargo-minimal-versions
-    - run: rustup toolchain add ${{ matrix.tc }}
+    - run: rustup toolchain install ${{ matrix.tc }}
     - run: cargo +${{ matrix.tc }} minimal-versions build --all --all-features --target=${{ matrix.cc }}
   cross-compile-ios:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest]
-        tc: [1.70.0]
+        tc: [1.70.0, stable, beta]
         cc: [aarch64-apple-ios]
     steps:
     - uses: taiki-e/checkout-action@v1
     - uses: taiki-e/install-action@v2
       with:
         tool: cargo-hack,cargo-minimal-versions
-    - run: rustup toolchain add ${{ matrix.tc }}
+    - run: rustup toolchain install ${{ matrix.tc }}
     - run: cargo +${{ matrix.tc }} minimal-versions build --all --all-features --target=${{ matrix.cc }}
