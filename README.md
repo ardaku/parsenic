@@ -3,11 +3,18 @@
 #### A simple no-std/no-alloc I/O and parsing crate
 
  - No-std
- - Designed with standard Rust patterns in mind
+ - Designed with common Rust patterns in mind
    - Sealed traits
    - Extension traits
 
+## MSRV
+
+The current MSRV is Rust 1.70.
+
+MSRV is updated according to the [Ardaku MSRV guidelines].
+
 ## License
+
 Copyright © 2023-2024 The Parsenic Contributors.
 
 Licensed under any of
@@ -20,14 +27,17 @@ Licensed under any of
 at your option.
 
 ### Contribution
+
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
 licensed as described above, without any additional terms or conditions.
 
 ## Help
+
 If you want help using or contributing to this library, feel free to send me an
 email at <aldaronlau@gmail.com>.
 
+[Ardaku MSRV guidelines]: https://github.com/ardaku/.github/blob/v1/profile/MSRV.md
 [LICENSE\_APACHE]: https://github.com/ardaku/parsenic/blob/v0/LICENSE_APACHE
 [LICENSE\_BOOST]: https://github.com/ardaku/parsenic/blob/v0/LICENSE_BOOST
 [LICENSE\_MIT]: https://github.com/ardaku/parsenic/blob/v0/LICENSE_MIT
