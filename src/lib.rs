@@ -18,6 +18,17 @@
 //! bound reading and writing, there are the [`io::Source`] and
 //! [`io::Destination`] traits which work by buffering the bytes to be sent on
 //! an [`io::Sender`] or received on an [`io::Receiver`].
+//!
+//! # Features
+//!
+//! Some non-default features can enable unstable (no API stability guarantees)
+//! functionality.
+//!
+//!  - __*`unstable-io`*__: Bumps MSRV to 1.84, enables the [`io`] module
+//!  - __*`unstable-error`*__: Bumps MSRV to 1.81, implements [`Error`] for
+//!    error types
+//!
+//! [`Error`]: core::error::Error
 
 #![doc(
     html_logo_url = "https://ardaku.github.io/mm/logo.svg",
@@ -45,6 +56,7 @@ pub mod be;
 pub mod class;
 mod empty;
 pub mod error;
+#[cfg(feature = "unstable-io")]
 pub mod io;
 pub mod le;
 mod purge;

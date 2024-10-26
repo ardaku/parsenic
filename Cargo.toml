@@ -25,5 +25,19 @@ categories = [
 readme = "README.md"
 rust-version = "1.70"
 
-[dependencies]
-traitful = "0.3.0"
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies.traitful]
+version = "0.3.0"
+
+[features]
+# Enable the `io` module, MSRV 1.84 for `Pin::as_deref_mut()`
+# 
+# Unstable API has no stability guarantees
+unstable-io = []
+
+# Enable usage of the `Error` trait in core, MSRV 1.81
+# 
+# Unstable API has no stability guarantees
+unstable-error = []

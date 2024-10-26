@@ -1,4 +1,4 @@
-//! I/O primitives
+//! __*`unstable-io`*__ feature required; I/O primitives (MSRV 1.84)
 
 mod destination;
 mod receiver;

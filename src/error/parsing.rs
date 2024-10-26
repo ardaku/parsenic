@@ -1,3 +1,5 @@
+use core::fmt;
+
 use crate::error::{
     EndError, FlushError, FullError, LenError, LostError, OverflowError,
     StrError, Uleb128Error, Utf8Error,
@@ -19,6 +21,25 @@ pub enum Error {
     Full(FullError),
     /// Destination lost (from either corruption or disconnection)
     Lost(LostError),
+}
+
+/// __*`unstable-error`*__: feature required
+#[cfg(feature = "unstable-error")]
+impl core::error::Error for Error {}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("parsing error: ")?;
+
+        match self {
+            Self::Len(err) => fmt::Display::fmt(err, f),
+            Self::End(err) => fmt::Display::fmt(err, f),
+            Self::Utf8(err) => fmt::Display::fmt(err, f),
+            Self::Overflow(err) => fmt::Display::fmt(err, f),
+            Self::Full(err) => fmt::Display::fmt(err, f),
+            Self::Lost(err) => fmt::Display::fmt(err, f),
+        }
+    }
 }
 
 impl From<LenError> for Error {

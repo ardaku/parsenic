@@ -1,9 +1,20 @@
-use core::str;
+use core::{fmt, str};
 
 /// Invalid UTF-8
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 #[non_exhaustive]
 pub struct Utf8Error(str::Utf8Error);
+
+/// __*`unstable-error`*__: feature required
+#[cfg(feature = "unstable-error")]
+impl core::error::Error for Utf8Error {}
+
+impl fmt::Display for Utf8Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("invalid utf8: ")?;
+        fmt::Display::fmt(&self.0, f)
+    }
+}
 
 impl Utf8Error {
     /// Return the offset from the given reader's cursor up to which valid UTF-8
