@@ -44,7 +44,8 @@ jobs:
         tool: cargo-hack,cargo-minimal-versions
     - run: rustup set profile minimal
     - run: rustup toolchain install ${{ matrix.tc }}
-    - run: cargo +${{ matrix.tc }} minimal-versions test --all --all-features
+    - run: cargo update
+    - run: cargo +${{ matrix.tc }} test --all --all-features
   cross-compile:
     runs-on: ${{ matrix.os }}
     strategy:
