@@ -57,9 +57,7 @@ where
 
 impl<S, T> Seek for Pin<S>
 where
-    // FIXME: Can relax `Unpin` bounds after
-    // https://github.com/rust-lang/rust/issues/86918
-    S: DerefMut<Target = T> + Unpin,
+    S: DerefMut<Target = T>,
     T: Seek + Unpin,
 {
     fn seek(&mut self, pos: u64) {

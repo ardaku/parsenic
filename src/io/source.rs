@@ -36,16 +36,14 @@ where
 
 impl<S, T> Source for Pin<S>
 where
-    // FIXME: Can relax `Unpin` bounds after
-    // https://github.com/rust-lang/rust/issues/86918
-    S: DerefMut<Target = T> + Unpin,
-    T: Source + Unpin,
+    S: DerefMut<Target = T>,
+    T: Source,
 {
     fn poll_recv(
-        mut self: Pin<&mut Self>,
+        self: Pin<&mut Self>,
         cx: &mut Context<'_>,
         buf: &mut [u8],
     ) -> Poll<LostResult<usize>> {
-        <S::Target as Source>::poll_recv(Pin::new(&mut **self), cx, buf)
+        <S::Target as Source>::poll_recv(self.as_deref_mut(), cx, buf)
     }
 }

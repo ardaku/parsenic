@@ -1,6 +1,9 @@
+use core::{future, pin::Pin};
+
 use crate::{
+    error::{FlushError, FullError},
     io::{Destination, Seek, Truncate},
-    result::FlushResult,
+    result::{FlushResult, LostResult},
 };
 
 /// [`slice`] buffered sender.
@@ -38,13 +41,52 @@ where
     ///
     /// May not send the full amount of bytes until either the buffer is full or
     /// [`flush()`](Self::flush()) is called.
-    pub async fn send(&mut self, bytes: &[u8]) -> FlushResult {
-        todo!("{bytes:?}") // FIXME
+    pub async fn send(&mut self, bytes: &[u8]) -> LostResult<usize> {
+        let mut total_sent = 0;
+
+        for byte in bytes.iter().cloned() {
+            if self.cursor == BUF {
+                self.cursor = 0;
+
+                let sent = future::poll_fn(|cx| {
+                    Pin::new(&mut self.destination)
+                        .poll_send(cx, self.buffer.as_ref())
+                })
+                .await?;
+
+                total_sent += sent;
+
+                if sent != BUF {
+                    return Ok(total_sent);
+                }
+            }
+
+            self.buffer[self.cursor] = byte;
+            self.cursor += 1;
+        }
+
+        Ok(total_sent)
     }
 
     /// Send buffered data with the destination.
     pub async fn flush(&mut self) -> FlushResult {
-        todo!() // FIXME
+        let old_cursor = self.cursor;
+        let sent = future::poll_fn(|cx| {
+            Pin::new(&mut self.destination)
+                .poll_send(cx, &self.buffer[..self.cursor])
+        })
+        .await?;
+
+        self.cursor -= sent;
+
+        if self.cursor != 0 {
+            self.buffer.copy_within(sent..old_cursor, 0);
+            return Err(FlushError::Full(FullError::from_remaining(
+                self.cursor,
+            )));
+        }
+
+        Ok(())
     }
 }
 

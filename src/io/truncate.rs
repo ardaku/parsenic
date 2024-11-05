@@ -25,9 +25,7 @@ where
 
 impl<T, U> Truncate for Pin<T>
 where
-    // FIXME: Can relax `Unpin` bounds after
-    // https://github.com/rust-lang/rust/issues/86918
-    T: DerefMut<Target = U> + Unpin,
+    T: DerefMut<Target = U>,
     U: Truncate + Unpin,
 {
     fn truncate(&mut self) {
