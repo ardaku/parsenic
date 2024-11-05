@@ -2,7 +2,19 @@
 
 #### A simple no-std/no-alloc I/O and parsing crate
 
- - No-std
+[![tests](https://github.com/ardaku/parsenic/actions/workflows/rust.yml/badge.svg)](https://github.com/ardaku/parsenic/actions/workflows/rust.yml)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ardaku/parsenic)](https://github.com/ardaku/parsenic/)
+[![GitHub contributors](https://img.shields.io/github/contributors/ardaku/parsenic)](https://github.com/ardaku/parsenic/graphs/contributors)  
+[![Crates.io](https://img.shields.io/crates/v/parsenic)](https://crates.io/crates/parsenic)
+[![Crates.io](https://img.shields.io/crates/d/parsenic)](https://crates.io/crates/parsenic)
+[![Crates.io (recent)](https://img.shields.io/crates/dr/parsenic)](https://crates.io/crates/parsenic)  
+[![Crates.io](https://img.shields.io/crates/l/parsenic)](https://github.com/ardaku/parsenic/search?l=Text&q=license)
+[![Docs.rs](https://docs.rs/parsenic/badge.svg)](https://docs.rs/parsenic/)
+
+## About
+
+ - Portable (no-std / no-alloc)
+ - Easy and simple API
  - Designed with common Rust patterns in mind
    - Sealed traits
    - Extension traits
@@ -12,6 +24,8 @@
 The current MSRV is Rust 1.70.
 
 MSRV is updated according to the [Ardaku MSRV guidelines].
+
+Some unstable features bump the MSRV ([see feature docs](https://docs.rs/parsenic/latest/parsenic/#features))
 
 ## License
 
