@@ -44,4 +44,14 @@ pub trait Write: crate::Write {
     fn i128(&mut self, int: i128) -> FullResult {
         self.bytes(int.to_be_bytes())
     }
+
+    /// Write out a big endian encoded 32-bit float.
+    fn f32(&mut self, float: f32) -> FullResult {
+        self.bytes(float.to_be_bytes())
+    }
+
+    /// Write out a big endian encoded 64-bit float.
+    fn f64(&mut self, float: f64) -> FullResult {
+        self.bytes(float.to_be_bytes())
+    }
 }
