@@ -4,6 +4,19 @@ All notable changes to `parsenic` will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
+## [0.2.1] - 2024-11-16
+
+### Added
+
+ - `le::Read::f32()`
+ - `le::Read::f64()`
+ - `le::Write::f32()`
+ - `le::Write::f64()`
+ - `be::Read::f32()`
+ - `be::Read::f64()`
+ - `be::Write::f32()`
+ - `be::Write::f64()`
+
 ## [0.2.0] - 2024-11-05
 
 ### Added

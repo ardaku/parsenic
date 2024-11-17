@@ -44,4 +44,14 @@ pub trait Read: crate::Read {
     fn i128(&mut self) -> LenResult<i128> {
         Ok(i128::from_le_bytes(self.array()?))
     }
+
+    /// Read the next little endian `f32`
+    fn f32(&mut self) -> LenResult<f32> {
+        Ok(f32::from_le_bytes(self.array()?))
+    }
+
+    /// Read the next little endian `f64`
+    fn f64(&mut self) -> LenResult<f64> {
+        Ok(f64::from_le_bytes(self.array()?))
+    }
 }
